@@ -536,7 +536,7 @@ def PlayMovie(File_Name):
    
    videoclip = soundFolder + File_Name + ".webm"
 	
-   print("Play video clip:", clip)
+   print("Play video clip:", videoclip)
    
    cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
    #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
@@ -581,8 +581,9 @@ def PlayMovie(File_Name):
 
 
 if __name__ == '__main__':
+   
+    #app.run()
+    app.run(debug=True, host='0.0.0.0')
     #-------------OLED Init------------#
     OLED.Device_Init()		
     PlayMovie('BandL')
-    #app.run()
-    app.run(debug=True, host='0.0.0.0')

@@ -526,7 +526,6 @@ def closePreviousVideo():
 
 def PlayMovie(File_Name):
 
-   closePreviousVideo();
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)
    pygame.mixer.music.load(clip)
@@ -538,6 +537,7 @@ def PlayMovie(File_Name):
    print("Play video clip:", videoclip)
    
    global cap
+   closePreviousVideo();
    cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
    #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")

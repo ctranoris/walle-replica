@@ -394,9 +394,15 @@ def animate():
 	if clip is not None:
 		print("Animate:", clip)
 		if ( clip == '3'):
-			PlayMovie('BandL')
+			thread = videoPlayer(1, "BandL")
+	 		thread.start()
+	 	 	videothreads.append(thread)				
+			#PlayMovie('BandL')
 		if ( clip == '4'):	
-			PlayMovie('PutOnYourSundayClothes')
+			thread = videoPlayer(1, "PutOnYourSundayClothes")
+	 		thread.start()
+	 	 	videothreads.append(thread)	
+			#PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)

@@ -396,12 +396,12 @@ def animate():
 		if ( clip == '3'):
 			thread = videoPlayer(1, "BandL")
 			thread.start()
-	 	 	videothreads.append(thread)				
+			videothreads.append(thread)		
 			#PlayMovie('BandL')
 		if ( clip == '4'):	
 			thread = videoPlayer(1, "PutOnYourSundayClothes")
 			thread.start()
-	 	 	videothreads.append(thread)	
+			videothreads.append(thread)
 			#PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()

@@ -45,7 +45,7 @@ app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret ke
 #-------------OLED-----------------#
 WIDTH = 128
 HEIGHT = 128 # Change to 32 depending on your screen resolution
-PLAYVIDEO = false
+PLAYVIDEO = False
 ##########################################
 
 
@@ -394,10 +394,10 @@ def animate():
 	if clip is not None:
 		print("Animate:", clip)
 		if ( clip == 3):	
-			PLAYVIDEO = false
+			PLAYVIDEO = False
 			PlayMovie('BandL')
 		if ( clip == 4):	
-			PLAYVIDEO = false
+			PLAYVIDEO = False
 			PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
@@ -543,7 +543,7 @@ def PlayMovie(File_Name):
    #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "YELLOW")
    #OLED.Display_Image(image)
    #OLED.Delay(1000)
-   PLAYVIDEO = true
+   PLAYVIDEO = True
    while(cap.isOpened() and PLAYVIDEO):
        ret, frame = cap.read()
        frameStart = time.time()

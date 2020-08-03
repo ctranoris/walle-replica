@@ -526,7 +526,6 @@ def Display_Picture(File_Name):
 
 def PlayMovie(File_Name):
 
-   OLED.Device_Init()		
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)
    pygame.mixer.music.load(clip)

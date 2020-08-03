@@ -393,13 +393,11 @@ def animate():
 	clip = request.form.get('clip')
 	if clip is not None:
 		print("Animate:", clip)
-		if ( clip == '3'):	
-			PLAYVIDEO = False
-			OLED.Delay(2000)
+		if ( clip == '3'):
+			cap.release;
 			PlayMovie('BandL')
 		if ( clip == '4'):	
-			PLAYVIDEO = False
-			OLED.Delay(2000)
+			cap.release;
 			PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
@@ -528,6 +526,7 @@ def Display_Picture(File_Name):
 
 def PlayMovie(File_Name):
 
+   OLED.Device_Init()		
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)
    pygame.mixer.music.load(clip)
@@ -537,7 +536,7 @@ def PlayMovie(File_Name):
    videoclip = soundFolder + File_Name + ".webm"
 	
    print("Play video clip:", videoclip)
-   
+   global cap
    cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
    #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
@@ -577,7 +576,6 @@ def PlayMovie(File_Name):
        else:
            print("Video end")
            break
-   cap.release;
 
 
 if __name__ == '__main__':

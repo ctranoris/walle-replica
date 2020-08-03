@@ -576,8 +576,8 @@ def PlayMovie(File_Name):
 
 
 if __name__ == '__main__':
-    #app.run()
-    app.run(debug=False, host='0.0.0.0')
     #-------------OLED Init------------#
     OLED.Device_Init()		
     PlayMovie('BandL')
+    #app.run()
+    app.run(debug=False, host='0.0.0.0')

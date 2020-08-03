@@ -520,7 +520,8 @@ def Display_Picture(File_Name):
     OLED.Display_Image(image)
 
 def closePreviousVideo():
-	cap.release();
+	if cap:
+		cap.release();
 	OLED.Device_Init();		
 
 def PlayMovie(File_Name):

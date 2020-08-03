@@ -393,15 +393,12 @@ def animate():
 	clip = request.form.get('clip')
 	if clip is not None:
 		print("Animate:", clip)
-        if ( clip == 3):	
-            PLAYVIDEO = false
-            PlayMovie('BandL')
-        if ( clip == 4):	
-            PLAYVIDEO = false
-            PlayMovie('PutOnYourSundayClothes')
-                    
-            
-
+		if ( clip == 3):	
+			PLAYVIDEO = false
+			PlayMovie('BandL')
+		if ( clip == 4):	
+			PLAYVIDEO = false
+			PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)

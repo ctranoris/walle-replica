@@ -35,7 +35,7 @@ app = Flask(__name__)
 
 
 ##### VARIABLES WHICH YOU CAN MODIFY #####
-loginPassword = "put_password_here"                                  # Password for web-interface
+loginPassword = "12345"                                  # Password for web-interface
 arduinoPort = "ARDUINO"                                              # Default port which will be selected
 streamScript = "/home/pi/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
 soundFolder = "/home/pi/walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files

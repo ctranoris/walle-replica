@@ -395,12 +395,12 @@ def animate():
 		print("Animate:", clip)
 		if ( clip == '3'):
 			thread = videoPlayer(1, "BandL")
-	 		thread.start()
+			thread.start()
 	 	 	videothreads.append(thread)				
 			#PlayMovie('BandL')
 		if ( clip == '4'):	
 			thread = videoPlayer(1, "PutOnYourSundayClothes")
-	 		thread.start()
+			thread.start()
 	 	 	videothreads.append(thread)	
 			#PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:

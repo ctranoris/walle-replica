@@ -45,6 +45,7 @@ app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret ke
 #-------------OLED-----------------#
 WIDTH = 128
 HEIGHT = 128 # Change to 32 depending on your screen resolution
+captvid
 ##########################################
 
 
@@ -520,8 +521,8 @@ def Display_Picture(File_Name):
     OLED.Display_Image(image)
 
 def closePreviousVideo():
-	if cap:
-		cap.release();
+	if captvid:
+		captvid.release();
 	OLED.Device_Init();		
 
 def PlayMovie(File_Name):
@@ -536,9 +537,9 @@ def PlayMovie(File_Name):
 	
    print("Play video clip:", videoclip)
    
-   global cap
+   
    closePreviousVideo();
-   cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
+   captvid = cv2.VideoCapture(videoclip) #Enter the name of your video in here
    #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
    draw = ImageDraw.Draw(image)
@@ -548,8 +549,8 @@ def PlayMovie(File_Name):
    #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "YELLOW")
    #OLED.Display_Image(image)
    #OLED.Delay(1000)
-   while(cap.isOpened()):
-       ret, frame = cap.read()
+   while(captvid.isOpened()):
+       ret, frame = captvid.read()
        frameStart = time.time()
        if ret==True:
            if frameCounter%frameSkip == 0:

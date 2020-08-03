@@ -395,9 +395,11 @@ def animate():
 		print("Animate:", clip)
 		if ( clip == '3'):	
 			PLAYVIDEO = False
+			OLED.Delay(1000)
 			PlayMovie('BandL')
 		if ( clip == '4'):	
 			PLAYVIDEO = False
+			OLED.Delay(1000)
 			PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
@@ -530,7 +532,8 @@ def PlayMovie(File_Name):
    print("Play video/music clip:", clip)
    pygame.mixer.music.load(clip)
    pygame.mixer.music.set_volume(volume/10.0)
-		
+   pygame.mixer.music.play()
+   
    videoclip = soundFolder + File_Name + ".webm"
 	
    cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
@@ -567,7 +570,7 @@ def PlayMovie(File_Name):
                screenframe = Image.fromarray(resized)
                OLED.Display_Image(screenframe)
                frameEnd = time.time()
-               print(1/(frameEnd-frameStart))
+               #print(1/(frameEnd-frameStart))
            frameCounter=frameCounter+1
        else:
            print("Video end")

@@ -2,6 +2,7 @@
 # Robot Webinterface - Python Script
 # Simon Bluett, https://wired.chillibasket.com
 # V1.4, 16th February 2020
+# V1.4.1, 2nd August 2020 - Christos Tranoris (added OLED code)
 #############################################
 
 from flask import Flask, request, session, redirect, url_for, jsonify, render_template
@@ -13,6 +14,23 @@ import serial 		# for Arduino serial access
 import serial.tools.list_ports
 import subprocess 	# for shell commands
 
+
+#--------------Driver Library-----------------#
+import RPi.GPIO as GPIO
+import OLED_Driver as OLED
+#--------------Image Library---------------#
+from PIL  import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+from PIL import ImageColor
+#-------------Test Display Functions---------------#
+import sys
+import cv2
+import numpy as np
+import time
+
+
+
 app = Flask(__name__)
 
 
@@ -22,6 +40,12 @@ arduinoPort = "ARDUINO"                                              # Default p
 streamScript = "/home/pi/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
 soundFolder = "/home/pi/walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
+
+
+#-------------OLED-----------------#
+WIDTH = 128
+HEIGHT = 128 # Change to 32 depending on your screen resolution
+PLAYVIDEO = false
 ##########################################
 
 
@@ -369,6 +393,14 @@ def animate():
 	clip = request.form.get('clip')
 	if clip is not None:
 		print("Animate:", clip)
+        if ( clip == 3)	
+            PLAYVIDEO = false
+            PlayMovie('BandL')
+        if ( clip == 4)	
+            PLAYVIDEO = false
+            PlayMovie('PutOnYourSundayClothes')
+                    
+            
 
 		if test_arduino() == 1:
 			queueLock.acquire()
@@ -487,6 +519,68 @@ def arduinoStatus():
 	return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
 
+
+
+def Display_Picture(File_Name):
+    image = Image.open(File_Name)
+    OLED.Display_Image(image)
+
+
+
+def PlayMovie(File_Name):
+
+   clip = soundFolder + File_Name + ".ogg"
+   print("Play video/music clip:", clip)
+   pygame.mixer.music.load(clip)
+   pygame.mixer.music.set_volume(volume/10.0)
+		
+   videoclip = soundFolder + File_Name + ".webm"
+	
+   cap = cv2.VideoCapture(videoclip) #Enter the name of your video in here
+   #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
+   image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
+   draw = ImageDraw.Draw(image)
+   frameCounter = 0
+   frameSkip = 2 #Change to adjust frame rate
+   lowerThresh = 0# Adjust threshold according to video
+   #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "YELLOW")
+   #OLED.Display_Image(image)
+   #OLED.Delay(1000)
+   PLAYVIDEO = true
+   while(cap.isOpened() and PLAYVIDEO):
+       ret, frame = cap.read()
+       frameStart = time.time()
+       if ret==True:
+           if frameCounter%frameSkip == 0:
+               # Import image as grayscale
+   ###            gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+               resized = cv2.resize(frame, (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
+
+               # Resize to fit OLED screen dimensions
+   #            resized = cv2.resize(gray, (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
+   #            gray = cv2.cvtColor(resized, cv2.COLOR_BGR2GRAY)
+                # Threshold it to B&W
+   #               (thresh, bw) = cv2.threshold(gray, lowerThresh, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+                # Clear screen for next frame
+               draw.rectangle((0, 0, OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), outline=0, fill=0)
+   ##            oled.fill(0)
+               # Convert to OLED format, and print
+   #            screenframe = Image.fromarray(bw).convert("1")
+   #            OLED.Display_Image(screenframe)
+               screenframe = Image.fromarray(resized)
+               OLED.Display_Image(screenframe)
+               frameEnd = time.time()
+               print(1/(frameEnd-frameStart))
+           frameCounter=frameCounter+1
+       else:
+           print("Video end")
+           break
+
+
+
 if __name__ == '__main__':
     #app.run()
     app.run(debug=False, host='0.0.0.0')
+    #-------------OLED Init------------#
+    OLED.Device_Init()		
+    PlayMovie('BandL')

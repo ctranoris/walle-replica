@@ -393,10 +393,10 @@ def animate():
 	clip = request.form.get('clip')
 	if clip is not None:
 		print("Animate:", clip)
-		if ( clip == 3):	
+		if ( clip == '3'):	
 			PLAYVIDEO = False
 			PlayMovie('BandL')
-		if ( clip == 4):	
+		if ( clip == '4'):	
 			PLAYVIDEO = False
 			PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
@@ -580,4 +580,4 @@ if __name__ == '__main__':
     OLED.Device_Init()		
     PlayMovie('BandL')
     #app.run()
-    app.run(debug=False, host='0.0.0.0')
+    app.run(debug=True, host='0.0.0.0')

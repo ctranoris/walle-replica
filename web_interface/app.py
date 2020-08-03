@@ -45,7 +45,6 @@ app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret ke
 #-------------OLED-----------------#
 WIDTH = 128
 HEIGHT = 128 # Change to 32 depending on your screen resolution
-captvid
 ##########################################
 
 
@@ -61,6 +60,7 @@ batteryLevel = -999
 queueLock = threading.Lock()
 workQueue = queue.Queue()
 threads = []
+videothreads = []
 
 
 #############################################
@@ -515,15 +515,21 @@ def arduinoStatus():
 
 
 
+class videoPlayer (threading.Thread):
+	def __init__(self, threadID, name):
+		threading.Thread.__init__(self)
+		self.threadID = threadID
+		self.name = name
+	def run(self):
+		print("Starting Video Thread", self.name)
+		PlayMovie(self.name)
+		print("Exiting Video Thread", self.name)
+
 
 def Display_Picture(File_Name):
     image = Image.open(File_Name)
     OLED.Display_Image(image)
 
-def closePreviousVideo():
-	if captvid:
-		captvid.release();
-	OLED.Device_Init();		
 
 def PlayMovie(File_Name):
 
@@ -538,7 +544,6 @@ def PlayMovie(File_Name):
    print("Play video clip:", videoclip)
    
    
-   closePreviousVideo();
    captvid = cv2.VideoCapture(videoclip) #Enter the name of your video in here
    #image = Image.new('1', (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT))
    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
@@ -581,8 +586,11 @@ def PlayMovie(File_Name):
 
 if __name__ == '__main__':
      #-------------OLED Init------------#
-    OLED.Device_Init()		
-    PlayMovie('BandL')
-    #app.run()
-    app.run(debug=False, host='0.0.0.0')
+	 OLED.Device_Init()	
+	 thread = videoPlayer(1, "BandL")
+	 thread.start()
+	 videothreads.append(thread)	
+	 #PlayMovie('BandL')
+	 #app.run()
+	 app.run(debug=False, host='0.0.0.0')
   

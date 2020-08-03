@@ -1,9 +1,9 @@
-/* WALL-E CALIBRATION CODE
+/* WALL-E CALLIBRATION CODE
  ********************************************
  * Code by: Simon Bluett
  * Email:   hello@chillibasket.com
- * Version: 1.1
- * Date:    9th July 2020
+ * Version: 1.0 (With eyebrow support)
+ * Date:    23rd February 2020
  ********************************************/
 
 /* HOW TO USE:
@@ -36,9 +36,11 @@
  *                        {475, 230},  // eye right
  *                        {270, 440},  // eye left
  *                        {350, 185},  // arm left
- *                        {188, 360}}; // arm right
+ *                        {188, 360},  // arm right
+ *                        {200, 400},  // eyebrow left
+ *                        {400, 200}}; // eyebrow right
  *
- *    Copy the array and paste it into lines 108 to 114 in [wall-e.ino]
+ *    Copy the array and paste it into lines 108 to 116 in [wall-e.ino]
  */
 
 #include <Wire.h>
@@ -52,7 +54,7 @@
 
 // Define other constants
 // -- -- -- -- -- -- -- -- -- -- -- -- -- --
-#define SERVOS 7           // Number of servo motors
+#define SERVOS 9           // Number of servo motors
 
 
 // Instantiate objects
@@ -68,31 +70,44 @@ int preset[][2] =  {{398, 112},  // head rotation
                     {475, 230},	 // eye right
                     {270, 440},	 // eye left
                     {350, 185},	 // arm left
-                    {188, 360}}; // arm right
+                    {188, 360},  // arm right
+                    {200, 400},  // eyebrow left
+                    {400, 200}}; // eyebrow right
 
 // Rest position
-float restpos[7] = {50, 50, 40, 0, 0, 100, 100};
+float restpos[9] = {50, 50, 40, 0, 0, 100, 100, 0, 0};
 
 // Messages
-String messages1[7] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Right - ","Eye Left - ","Arm Left - ","Arm Right - "};
+String messages1[9] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Left - ","Eye Right - ","Arm Left - ","Arm Right - ","Eyebrow Left - ","Eyebrow Right - "};
 String messages2[][2] = {{"LOW (head facing left)", "HIGH (head facing right)"},
                         {"LOW (head looking down)", "HIGH (head looking up)"},
                         {"LOW (head looking down)", "HIGH (head looking up)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
-                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"}};
+                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
+                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"},
+                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"}};
 
 // Runtime Variables
 int currentServo = 0;
 int currentPosition = -1;
-int position = preset[0][0] - 1;
+int position = preset[0][1];
 
 
 // ------------------------------------------------------------------
 // 		INITIAL SETUP
 // ------------------------------------------------------------------
 void setup() {
+
+	// Initialize serial communication for debugging
+	Serial.begin(115200);
+	delay(1000);
+
+	//while(!Serial);
+	Serial.println("Starting Wall-E Calibration Program");
+	Serial.println("------------------------------------------------------------------");
+	Serial.println("Move the servos to the correct positions using the serial commands\n");
 
 	// Output Enable (EO) pin for the servo motors
 	pinMode(SR_OE, OUTPUT);
@@ -102,17 +117,6 @@ void setup() {
 	pwm.begin();
 	pwm.setPWMFreq(60);
 
-	// Turn off servo outputs
-	for (int i = 0; i < SERVOS; i++) pwm.setPin(i, 0);
-
-	// Initialize serial communication for debugging
-	Serial.begin(115200);
-	while(!Serial);
-
-	Serial.println(F("////////// Starting Wall-E Calibration Program //////////"));
-
-	digitalWrite(SR_OE, LOW);
-	softStart();
 	moveToNextPosition();
 }
 
@@ -125,7 +129,7 @@ void moveToNextPosition() {
 	if (currentPosition != -1) {
 		// Save the current position
 		preset[currentServo][currentPosition] = position;
-		Serial.print(F("[Confirmed Position: ")); Serial.print(position); Serial.println("]\n");
+		Serial.print("[Confirmed Position: "); Serial.print(position); Serial.println("]\n");
 	}
 
 	// Move on to the next position
@@ -134,57 +138,36 @@ void moveToNextPosition() {
 
 	// Else move servo to middle position and go to the next servo
 	} else {
-		changeServoPosition(int(restpos[currentServo] / 100.0 * (preset[currentServo][1] - preset[currentServo][0]) + preset[currentServo][0]));
-		pwm.setPin(currentServo, 0);
+		pwm.setPWM(currentServo, 0, int(restpos[currentServo] / 100.0 * (preset[currentServo][1] - preset[currentServo][0]) + preset[currentServo][0]));
 		currentServo++;
 		currentPosition = 0;
-		position = preset[currentServo][currentPosition] - 1;
 
 		// If all servos are calibrated, output the results
-		if (currentServo == SERVOS) {
-			digitalWrite(SR_OE, HIGH);
-			outputResults();
-		}
-
-		// Soft start the servo to prevent sudden jumps
-		softStart();
+		if (currentServo == SERVOS) outputResults();
 	}
 
 	// Output message to serial monitor
 	Serial.print(messages1[currentServo]);
 	Serial.println(messages2[currentServo][currentPosition]);
-	Serial.println(F("-----------------------------------"));
-	Serial.println(F("Commands: 'a'=-10deg, 'd'=+10deg, 'z'=-1deg, 'c'=+1deg, 'n'=confirm position"));
+	Serial.println("-----------------------------------");
+	Serial.println("Commands: 'a'=-10deg, 'd'=+10deg, 'z'=-1deg, 'c'=+1deg, 'n'=confirm position");
+
+	// Disable and re-enable the servos
+	digitalWrite(SR_OE, HIGH);
+	delay(500);
+	digitalWrite(SR_OE, LOW);
 
 	// Move the current servo to the proper position
-	changeServoPosition(preset[currentServo][currentPosition]);
+	position = preset[currentServo][currentPosition];
+	pwm.setPWM(currentServo, 0, position);
 }
 
 
 // -------------------------------------------------------------------
 // 		CHANGE SERVO POSITION
 // -------------------------------------------------------------------
-void changeServoPosition(int newPosition) {
-	while (position != newPosition) {
-		if (position < newPosition) position++;
-		else position--;
-		pwm.setPWM(currentServo, 0, position);
-		delay(5);
-	}
-}
-
-
-// -------------------------------------------------------------------
-// 		SOFT START - Try and start up servo gently
-// -------------------------------------------------------------------
-void softStart() {
-	unsigned long endTime = millis() + 1000;
-	while (endTime > millis()) {
-		pwm.setPWM(currentServo, 0, position);
-		delay(10);
-		pwm.setPin(currentServo, 0);
-		delay(50);
-	}
+void changeServoPosition(int difference) {
+	position += difference;
 	pwm.setPWM(currentServo, 0, position);
 }
 
@@ -201,6 +184,8 @@ void outputResults() {
 	Serial.print("                    {"); Serial.print(preset[4][0]); Serial.print(","); Serial.print(preset[4][1]); Serial.println("},  // eye left");
 	Serial.print("                    {"); Serial.print(preset[5][0]); Serial.print(","); Serial.print(preset[5][1]); Serial.println("},  // arm left");
 	Serial.print("                    {"); Serial.print(preset[6][0]); Serial.print(","); Serial.print(preset[6][1]); Serial.println("}}; // arm right");
+	Serial.print("                    {"); Serial.print(preset[7][0]); Serial.print(","); Serial.print(preset[7][1]); Serial.println("},  // eyebrow left");
+	Serial.print("                    {"); Serial.print(preset[8][0]); Serial.print(","); Serial.print(preset[8][1]); Serial.println("}}; // eyebrow right");
 
 	// Stop the program
 	while(1){}
@@ -220,19 +205,19 @@ void readSerial() {
 
 	// Decrease servo position by 10 degrees
 	} else if (inchar == 'a') {
-		changeServoPosition(position - 10);
+		changeServoPosition(-10);
 
 	// Increase servo position by 10 degrees
 	} else if (inchar == 'd') {
-		changeServoPosition(position + 10);
+		changeServoPosition(10);
 
 	// Decrease servo position by 1 degree
 	} else if (inchar == 'z') {
-		changeServoPosition(position - 1);
+		changeServoPosition(-1);
 
 	// Increase servo position by 1 degree
 	} else if (inchar == 'c') {
-		changeServoPosition(position + 1);
+		changeServoPosition(1);
 	}
 }
 

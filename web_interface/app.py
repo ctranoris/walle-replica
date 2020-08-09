@@ -2,7 +2,6 @@
 # Robot Webinterface - Python Script
 # Simon Bluett, https://wired.chillibasket.com
 # V1.4, 16th February 2020
-# V1.4.1, 2nd August 2020 - Christos Tranoris (added OLED code)
 #############################################
 
 from flask import Flask, request, session, redirect, url_for, jsonify, render_template
@@ -187,7 +186,7 @@ def onoff_streamer():
 		result = ""
 		# Check whether the stream is on or not
 		try:
-			result = subprocess.run([streamScript, 'status'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+			result = subprocess.call([streamScript, 'status'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 		except subprocess.CalledProcessError as e:
 			result = e.output.decode('utf-8')
 		print(result)
@@ -353,7 +352,7 @@ def settings():
 				return jsonify({'status': 'OK','streamer': 'Offline'})
 		elif thing == "shutdown":
 			print("Shutting down Raspberry Pi!", value)
-			result = subprocess.run(['sudo','nohup','shutdown','-h','now'], stdout=subprocess.PIPE).stdout.decode('utf-8')
+			result = subprocess.call(['sudo','nohup','shutdown','-h','now'], stdout=subprocess.PIPE).stdout.decode('utf-8')
 			return jsonify({'status': 'OK','msg': 'Raspberry Pi is shutting down'})
 		else:
 			return jsonify({'status': 'Error','msg': 'Unable to read POST data'})

@@ -36,9 +36,7 @@
  *                        {475, 230},  // eye right
  *                        {270, 440},  // eye left
  *                        {350, 185},  // arm left
- *                        {188, 360},  // arm right
- *                        {200, 400},  // eyebrow left
- *                        {400, 200}}; // eyebrow right
+ *                        {188, 360}}; // arm right
  *
  *    Copy the array and paste it into lines 116 to 122 in [wall-e.ino]
  */
@@ -54,7 +52,7 @@
 
 // Define other constants
 // -- -- -- -- -- -- -- -- -- -- -- -- -- --
-#define SERVOS 9           // Number of servo motors
+#define SERVOS 7           // Number of servo motors
 
 
 // Instantiate objects
@@ -64,19 +62,16 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 
 // Servo Positions:  Low,High
-int preset[][2] =  {{588,302},  // head rotation
-                    {645,168},  // neck top
-                    {100,470},  // neck bottom
-                    {145,300},  // eye right
-                    {130,250},  // eye left
-                    {160,385},  // arm left
-                    {138,360}}; // arm right
-                    {150,250},  // eyebrow left
-                    {570,420}}; // eyebrow right
-
+int preset[][2] =  {{398, 112},  // head rotation
+                    {565, 188},	 // neck top
+                    {200, 400},	 // neck bottom
+                    {475, 230},	 // eye right
+                    {270, 440},	 // eye left
+                    {350, 185},	 // arm left
+                    {188, 360}}; // arm right
 
 // Rest position
-float restpos[9] = {50, 50, 40, 0, 0, 100, 100, 0, 0};
+float restpos[7] = {50, 50, 40, 0, 0, 100, 100};
 
 // Messages
 String messages1[7] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Right - ","Eye Left - ","Arm Left - ","Arm Right - "};
@@ -86,9 +81,7 @@ String messages2[][2] = {{"LOW (head facing left)", "HIGH (head facing right)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
-                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
-                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"},
-                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"}};
+                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"}};
 
 // Runtime Variables
 int currentServo = 0;
@@ -207,9 +200,7 @@ void outputResults() {
 	Serial.print("                    {"); Serial.print(preset[3][0]); Serial.print(","); Serial.print(preset[3][1]); Serial.println("},  // eye right");
 	Serial.print("                    {"); Serial.print(preset[4][0]); Serial.print(","); Serial.print(preset[4][1]); Serial.println("},  // eye left");
 	Serial.print("                    {"); Serial.print(preset[5][0]); Serial.print(","); Serial.print(preset[5][1]); Serial.println("},  // arm left");
-	Serial.print("                    {"); Serial.print(preset[6][0]); Serial.print(","); Serial.print(preset[6][1]); Serial.println("},  // arm right");
-	Serial.print("                    {"); Serial.print(preset[7][0]); Serial.print(","); Serial.print(preset[7][1]); Serial.println("},  // eyebrow left");
-	Serial.print("                    {"); Serial.print(preset[8][0]); Serial.print(","); Serial.print(preset[8][1]); Serial.println("}}; // eyebrow right");
+	Serial.print("                    {"); Serial.print(preset[6][0]); Serial.print(","); Serial.print(preset[6][1]); Serial.println("}}; // arm right");
 
 	// Stop the program
 	while(1){}

@@ -1,6 +1,6 @@
 [![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![Issues](https://img.shields.io/github/issues-raw/chillibasket/walle-replica.svg?maxAge=25000)](https://github.com/chillibasket/walle-replica/issues)
-[![GitHub last commit](https://img.shields.io/github/last-commit/chillibasket/walle-replica.svg?style=flat)](https://github.com/chillibasket/walle-replica/commits/master)
+[![Issues](https://img.shields.io/github/issues-raw/ctranoris/walle-replica.svg?maxAge=25000)](https://github.com/ctranoris/walle-replica/issues)
+[![GitHub last commit](https://img.shields.io/github/last-commit/ctranoris/walle-replica.svg?style=flat)](https://github.com/ctranoris/walle-replica/commits/master)
 
 # Wall-E Robot Replica
 Robot and controller code for a Wall-E replica robot. For more information about the robot, visit https://wired.chillibasket.com/3d-printed-wall-e/
@@ -78,7 +78,7 @@ The web interface is programmed in Python and uses *Flask* to generate a server.
 
 #### Battery Level Detection
 When using batteries to power the robot, it is important to keep track of how much power is left. Some batteries may break if they are over-discharged, and the SD card of the Raspberry Pi may become corrupted if not enough power is delivered.
-1. To use the battery level detection feature on the Arduino, connect the following resistors and wiring as shown in the image below. The resistors (potential divider) reduce the 12V voltage down to a value below 5V, which is safe for the Arduino to measure using its analogue pins. The recommended resistor values are `R1 = 100kŸ` and `R2 = 47kŸ`.
+1. To use the battery level detection feature on the Arduino, connect the following resistors and wiring as shown in the image below. The resistors (potential divider) reduce the 12V voltage down to a value below 5V, which is safe for the Arduino to measure using its analogue pins. The recommended resistor values are `R1 = 100k√ô` and `R2 = 47k√ô`.
 1. Uncomment line 50 in the main Arduino sketch *wall-e.ino*.
 1. If you are using different resistor values, change the value of the potential divider gain factor on line 54 of the sketch, according to the formula: `POT_DIV = R2 / (R1 + R2)`. 
 1. The program should now automatically check the battery level every 10 seconds, and this level will be shown on the Raspberry Pi web-interface in the "Status" section.

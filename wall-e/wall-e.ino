@@ -58,7 +58,7 @@
 // Define other constants
 // -- -- -- -- -- -- -- -- -- -- -- -- -- --
 #define FREQUENCY 10       // Time in milliseconds of how often to update servo and motor positions
-#define SERVOS 7           // Number of servo motors
+#define SERVOS 9           // Number of servo motors (7 normal servos plus the two eyebrow servos)
 #define THRESHOLD 1        // The minimum error which the dynamics controller tries to achieve
 #define MOTOR_OFF 6000 	   // Turn servo motors off after 6 seconds
 #define MAX_SERIAL 5       // Maximum number of characters that can be received
@@ -113,25 +113,29 @@ uint8_t serialLength = 0;
 
 // ****** SERVO MOTOR CALIBRATION *********************
 // Servo Positions:  Low,High
-int preset[][2] =  {{410,120},  // head rotation
-                    {532,178},  // neck top
-                    {120,310},  // neck bottom
-                    {465,271},  // eye right
-                    {278,479},  // eye left
-                    {340,135},  // arm left
-                    {150,360}}; // arm right
+int preset[][2] =  {{588,302},  // head rotation
+                    {645,168},  // neck top
+                    {100,470},  // neck bottom
+                    {145,300},  // eye right
+                    {130,250},  // eye left
+                    {160,385},  // arm left
+                    {138,360}, // arm right
+                    {150,250},  // eyebrow left
+                    {570,420}}; // eyebrow right
+
 // *****************************************************
 
 
 // Servo Control - Position, Velocity, Acceleration
 // -- -- -- -- -- -- -- -- -- -- -- -- -- --
-// Servo Pins:	     0,   1,   2,   3,   4,   5,   6,   -,   -
-// Joint Name:	  head,necT,necB,eyeR,eyeL,armL,armR,motL,motR
-float curpos[] = { 248, 560, 140, 475, 270, 250, 290, 180, 180};  // Current position (units)
-float setpos[] = { 248, 560, 140, 475, 270, 250, 290,   0,   0};  // Required position (units)
-float curvel[] = {   0,   0,   0,   0,   0,   0,   0,   0,   0};  // Current velocity (units/sec)
-float maxvel[] = { 500, 400, 500,2400,2400, 600, 600, 255, 255};  // Max Servo velocity (units/sec)
-float accell[] = { 350, 300, 480,1800,1800, 500, 500, 800, 800};  // Servo acceleration (units/sec^2)
+// Servo Pins:	     0,   1,   2,   3,   4,   5,   6,   7,   8,   -,   -
+// Joint Name:	  head,necT,necB,eyeR,eyeL,armL,armR,ebrL,ebrR,motL,motR
+float curpos[] = { 248, 560, 140, 475, 270, 250, 290, 300, 300, 180, 180};  // Current position (units)
+float setpos[] = { 248, 560, 140, 475, 270, 250, 290, 300, 300,   0,   0};  // Required position (units)
+float curvel[] = {   0,   0,   0,   0,   0,   0,   0,   0,   0,   0,   0};  // Current velocity (units/sec)
+float maxvel[] = { 500, 400, 500,2400,2400, 600, 600,1000,1000, 255, 255};  // Max Servo velocity (units/sec)
+float accell[] = { 350, 300, 480,1800,1800, 500, 500,1200,1200, 800, 800};  // Servo acceleration (units/sec^2)
+
 
 
 // ------------------------------------------------------------------
@@ -216,7 +220,7 @@ void evaluateSerial() {
 	if      (firstChar == 'X' && number >= -100 && number <= 100) turnVal = int(number * 2.55); 		// Forward/reverse control
 	else if (firstChar == 'Y' && number >= -100 && number <= 100) moveVal = int(number * 2.55); 		// Left/right control
 	else if (firstChar == 'S' && number >=  100 && number <= 100) turnOff = number; 					// Steering offset
-	else if (firstChar == 'O' && number >=    0 && number <= 250) curpos[7] = curpos[8] = int(number); 	// Motor deadzone offset
+	else if (firstChar == 'O' && number >=    0 && number <= 250) curpos[9] = curpos[10] = int(number); 	// Motor deadzone offset
 
 	// Animations
 	// -- -- -- -- -- -- -- -- -- -- -- -- -- --
@@ -257,6 +261,14 @@ void evaluateSerial() {
 		autoMode = false;
 		queue.clear();
 		setpos[3] = int(number * 0.01 * (preset[3][1] - preset[3][0]) + preset[3][0]);
+	} else if (firstChar == 'J' && number >= 0 && number <= 100) { // Move eyebrow left
+		autoMode = false;
+		queue.clear();
+		setpos[7] = int(number * 0.01 * (preset[7][1] - preset[7][0]) + preset[7][0]);
+	} else if (firstChar == 'K' && number >= 0 && number <= 100) { // Move eyebrow right
+		autoMode = false;
+		queue.clear();
+		setpos[8] = int(number * 0.01 * (preset[8][1] - preset[8][0]) + preset[8][0]);
 	}
 	
 	// Manual Movements with WASD
@@ -305,7 +317,25 @@ void evaluateSerial() {
 		setpos[4] = int(0.4 * (preset[4][1] - preset[4][0]) + preset[4][0]);
 		setpos[3] = int(0.4 * (preset[3][1] - preset[3][0]) + preset[3][0]);
 	}
-
+	
+	// Manual Eyebrow Movements
+	// -- -- -- -- -- -- -- -- -- -- -- -- -- --
+	else if (firstChar == 'r') {		// Left eyebrow up
+		setpos[7] = preset[7][1];
+		setpos[8] = preset[8][0];
+	}
+	else if (firstChar == 't') {		// Both eyebrows up
+		setpos[7] = preset[7][1];
+		setpos[8] = preset[8][1];
+	}
+	else if (firstChar == 'y') {		// Both eyebrows down
+		setpos[7] = preset[7][0];
+		setpos[8] = preset[8][0];
+	}
+	else if (firstChar == 'u') {		// Right eyerbrow up
+		setpos[7] = preset[7][0];
+		setpos[8] = preset[8][1];
+	}
 	// Head movement
 	// -- -- -- -- -- -- -- -- -- -- -- -- -- --
 	else if (firstChar == 'f') {		// Head up
@@ -494,8 +524,8 @@ void softStart(animation_t targetPos, int time) {
 // -------------------------------------------------------------------
 void manageMotors(float dt) {
 	// Update Main Motor Values
-	setpos[7] = moveVal - turnVal - turnOff;
-	setpos[8] = moveVal + turnVal + turnOff;
+	setpos[9] = moveVal - turnVal - turnOff;
+	setpos[10] = moveVal + turnVal + turnOff;
 
 	// MAIN DRIVING MOTORS
 	// -  -  -  -  -  -  -  -  -  -  -  -  -

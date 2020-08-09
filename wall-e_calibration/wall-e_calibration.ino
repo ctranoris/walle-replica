@@ -36,7 +36,9 @@
  *                        {475, 230},  // eye right
  *                        {270, 440},  // eye left
  *                        {350, 185},  // arm left
- *                        {188, 360}}; // arm right
+ *                        {188, 360},  // arm right
+ *                        {200, 400},  // eyebrow left
+ *                        {400, 200}}; // eyebrow right
  *
  *    Copy the array and paste it into lines 116 to 122 in [wall-e.ino]
  */
@@ -68,7 +70,9 @@ int preset[][2] =  {{398, 112},  // head rotation
                     {475, 230},	 // eye right
                     {270, 440},	 // eye left
                     {350, 185},	 // arm left
-                    {188, 360}}; // arm right
+                    {188, 360}, // arm right
+                    {150, 250},  // eyebrow left
+                    {570, 420}}; // eyebrow right
 
 // Rest position
 float restpos[7] = {50, 50, 40, 0, 0, 100, 100};
@@ -200,7 +204,9 @@ void outputResults() {
 	Serial.print("                    {"); Serial.print(preset[3][0]); Serial.print(","); Serial.print(preset[3][1]); Serial.println("},  // eye right");
 	Serial.print("                    {"); Serial.print(preset[4][0]); Serial.print(","); Serial.print(preset[4][1]); Serial.println("},  // eye left");
 	Serial.print("                    {"); Serial.print(preset[5][0]); Serial.print(","); Serial.print(preset[5][1]); Serial.println("},  // arm left");
-	Serial.print("                    {"); Serial.print(preset[6][0]); Serial.print(","); Serial.print(preset[6][1]); Serial.println("}}; // arm right");
+	Serial.print("                    {"); Serial.print(preset[6][0]); Serial.print(","); Serial.print(preset[6][1]); Serial.println("}, // arm right");
+	Serial.print("                    {"); Serial.print(preset[7][0]); Serial.print(","); Serial.print(preset[7][1]); Serial.println("},  // eyebrow left");
+	Serial.print("                    {"); Serial.print(preset[8][0]); Serial.print(","); Serial.print(preset[8][1]); Serial.println("}}; // eyebrow right");
 
 	// Stop the program
 	while(1){}

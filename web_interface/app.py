@@ -38,6 +38,7 @@ loginPassword = "12345"                                  # Password for web-inte
 arduinoPort = "ARDUINO"                                              # Default port which will be selected
 streamScript = "/home/pi/mjpg-streamer.sh"                           # Location of script used to start/stop video stream
 soundFolder = "/home/pi/walle-replica/web_interface/static/sounds/"  # Location of the folder containing all audio files
+oledFolder = "/home/pi/walle-replica/web_interface/oled/"  # Location of the folder containing all audio files
 app.secret_key = os.environ.get("SECRET_KEY") or os.urandom(24)      # Secret key used for login session cookies
 
 
@@ -401,6 +402,14 @@ def animate():
 			thread = videoPlayer(1, "PutOnYourSundayClothes")
 			thread.start()
 			videothreads.append(thread)
+		if ( clip == '5'):	
+			thread = videoPlayer(1, "LaVieenRose")
+			thread.start()
+			videothreads.append(thread)
+		if ( clip == '6'):	
+			thread = videoPlayer(1, "DowntoEarth")
+			thread.start()
+			videothreads.append(thread)
 			#PlayMovie('PutOnYourSundayClothes')
 		if test_arduino() == 1:
 			queueLock.acquire()
@@ -512,6 +521,7 @@ def arduinoStatus():
 	if action is not None:
 		if action == "battery":
 			if test_arduino():
+				DisplayBatteryLevel();
 				return jsonify({'status': 'OK','battery':batteryLevel})
 			else:
 				return jsonify({'status': 'Error','msg':'Arduino not connected'})
@@ -533,6 +543,29 @@ class videoPlayer (threading.Thread):
 
 def Display_Picture(File_Name):
     image = Image.open(File_Name)
+    OLED.Display_Image(image)
+
+def DisplayBatteryLevel():
+	# oledFolder
+    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
+    draw = ImageDraw.Draw(image)
+    font = ImageFont.truetype(oledFolder + 'cambriab.ttf',24)
+
+    draw.text((0, 12), 'Level:' + batteryLevel, fill = "BLUE", font = font)
+    draw.text((0, 36), 'Electronic', fill = "BLUE",font = font)
+    draw.text((20, 72), '1.5 inch', fill = "CYAN", font = font)
+    draw.text((10, 96), 'R', fill = "RED", font = font)
+    draw.text((25, 96), 'G', fill = "GREEN", font = font)
+    draw.text((40, 96), 'B', fill = "BLUE", font = font)
+    draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
+    
+    batteryLevelNorm =batteryLevel;
+    if (batteryLevelNorm>100):
+    	batteryLevelNorm = 100
+    
+    draw.rectangle([(0, 100), (101, 121)], fill = "BLUE", outline = "BLUE")
+    draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "YELLOW", outline = None)
+
     OLED.Display_Image(image)
 
 

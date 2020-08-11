@@ -548,10 +548,12 @@ def Display_Picture(File_Name):
 def DisplayBatteryLevel():
 	# oledFolder
     #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
-    image = Image.open( oledFolder + 'b100.jpg' )
+    image = Image.open( oledFolder + 'bsun.jpg' )
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype(oledFolder + 'cambriab.ttf',8)
-
+    fontTitle = ImageFont.truetype(oledFolder + 'cambriab.ttf',12)
+    draw.text((0, 16), 'SOLAR CHARGE LEVEL', fill = "YELLOW", font = fontTitle)
+    
+    font = ImageFont.truetype(oledFolder + 'cambriab.ttf',8)    
     draw.text((0, 12), 'Level:' + str(batteryLevel), fill = "BLUE", font = font)
     draw.text((0, 36), 'Electronic', fill = "BLUE",font = font)
     draw.text((20, 72), '1.5 inch', fill = "CYAN", font = font)
@@ -571,10 +573,12 @@ def DisplayBatteryLevel():
     draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
     draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
 
-    if (batteryLevelNorm>140):
-        draw.text((0, 104), 'Charging', fill = "BLUE", font = font)
+    if (batteryLevel>140):
+        draw.text((5, 104), 'Charging', fill = "BLUE", font = font)
+    elif (batteryLevel<0):
+        draw.text((5, 104), 'Not Connected ' +  str(batteryLevel), fill = "RED", font = font)
     else:
-        draw.text((0, 104), 'Not Connected', fill = "RED", font = font)
+        draw.text((5, 104), str(batteryLevel) + '%', fill = "BLACK", font = font)
 
     OLED.Display_Image(image)
 

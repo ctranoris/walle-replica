@@ -54,7 +54,7 @@
 
 // Define other constants
 // -- -- -- -- -- -- -- -- -- -- -- -- -- --
-#define SERVOS 7           // Number of servo motors
+#define SERVOS 9           // Number of servo motors
 
 
 // Instantiate objects
@@ -85,7 +85,9 @@ String messages2[][2] = {{"LOW (head facing left)", "HIGH (head facing right)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
-                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"}};
+                        {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
+                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"},
+                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"}};
 
 // Runtime Variables
 int currentServo = 0;

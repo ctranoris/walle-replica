@@ -560,13 +560,13 @@ def DisplayBatteryLevel():
     draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
     
     batteryLevelNorm = 0;
-    batteryLevelNorm =batteryLevel;
-    if (batteryLevel>140):
+
+    if (batteryLevelNorm>140):
     	batteryLevelNorm = 100
     	draw.text((0, 96), 'Charging', fill = "GREEN", font = font)
-    if (batteryLevel>100):
+    if (batteryLevelNorm>100):
     	batteryLevelNorm = 100
-    elif (batteryLevel>=0):
+    elif (batteryLevelNorm>=0):
     	batteryLevelNorm = batteryLevel
     
     draw.rectangle([(0, 100), (101, 121)], fill = "BLUE", outline = "BLUE")
@@ -631,10 +631,12 @@ def PlayMovie(File_Name):
 if __name__ == '__main__':
      #-------------OLED Init------------#
 	 OLED.Device_Init()	
-	 thread = videoPlayer(1, "BandL")
-	 thread.start()
-	 videothreads.append(thread)	
+	 #thread = videoPlayer(1, "BandL")
+	 #thread.start()
+	 #videothreads.append(thread)	
 	 #PlayMovie('BandL')
 	 #app.run()
+	 PlayMovie('BandL')
+	 DisplayBatteryLevel()
 	 app.run(debug=False, host='0.0.0.0')
   

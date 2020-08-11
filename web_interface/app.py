@@ -546,17 +546,18 @@ def Display_Picture(File_Name):
     OLED.Display_Image(image)
 
 def DisplayBatteryLevel():
+    global batteryLevel
 	# oledFolder
     #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
     image = Image.open( oledFolder + 'bsun.jpg' )
     draw = ImageDraw.Draw(image)
-    fontTitle = ImageFont.truetype(oledFolder + 'cambriab.ttf',12)
-    draw.text((0, 16), 'SOLAR CHARGE LEVEL', fill = "YELLOW", font = fontTitle)
+    fontTitle = ImageFont.truetype(oledFolder + 'cambriab.ttf',10)
+    draw.text((16, 0), 'SOLAR CHARGE LEVEL', fill = "YELLOW", font = fontTitle)
     
     font = ImageFont.truetype(oledFolder + 'cambriab.ttf',8)    
-    draw.text((0, 12), 'Level:' + str(batteryLevel), fill = "BLUE", font = font)
-    draw.text((0, 36), 'Electronic', fill = "BLUE",font = font)
-    draw.text((20, 72), '1.5 inch', fill = "CYAN", font = font)
+    #draw.text((0, 12), 'Level:' + str(batteryLevel), fill = "BLUE", font = font)
+    #draw.text((0, 36), 'Electronic', fill = "BLUE",font = font)
+    #draw.text((20, 72), '1.5 inch', fill = "CYAN", font = font)
     #draw.text((10, 96), 'R', fill = "RED", font = font)
     #draw.text((25, 96), 'G', fill = "GREEN", font = font)
     #draw.text((40, 96), 'B', fill = "BLUE", font = font)
@@ -569,6 +570,10 @@ def DisplayBatteryLevel():
     	batteryLevelNorm = 100
     elif (batteryLevel>=0):
     	batteryLevelNorm = batteryLevel
+    
+    for y in range(10):
+    	draw.rectangle([(60, 25+y*5), (120, 30+y*5)], fill = "GREEN", outline = "BLACK")
+    
     
     draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
     draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)

@@ -44,14 +44,14 @@
 //
 // The scaling factor is calculated according to ratio of the two resistors:
 //   POT_DIV = R2 / (R1 + R2)
-//   For example: 47000 / (100000 + 47000) = 0.3197
+//   For example: 68000 / (90000 + 68000) = 0.4303
 //
 // To enable battery level detection, uncomment the next line:
-//#define BAT_L A2 			// Battery level detection analogue pin
+#define BAT_L A2 			// Battery level detection analogue pin
 #ifdef BAT_L
-	#define BAT_MAX 12.6   // Maximum voltage
+	#define BAT_MAX 11.1   // Maximum voltage
 	#define BAT_MIN 10.2   // Minimum voltage
-	#define POT_DIV 0.3197 // Potential divider scaling factor
+	#define POT_DIV 0.4303 // Potential divider scaling factor
 #endif
 
 
@@ -113,15 +113,15 @@ uint8_t serialLength = 0;
 
 // ****** SERVO MOTOR CALIBRATION *********************
 // Servo Positions:  Low,High
-int preset[][2] =  {{588,302},  // head rotation
-                    {645,168},  // neck top
+int preset[][2] =  {{608,362},  // head rotation
+                    {645,148},  // neck top
                     {100,470},  // neck bottom
-                    {145,300},  // eye right
-                    {130,250},  // eye left
-                    {160,385},  // arm left
-                    {138,360}, // arm right
-                    {150,250},  // eyebrow left
-                    {570,420}}; // eyebrow right
+                    {265,330},  // eye right
+                    {260,160},  // eye left
+                    {600,375},  // arm left
+                    {428,600}, // arm right
+                    {290,170},  // eyebrow left
+                    {450,460}}; // eyebrow right
 
 // *****************************************************
 

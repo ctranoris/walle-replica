@@ -64,18 +64,18 @@ Adafruit_PWMServoDriver pwm = Adafruit_PWMServoDriver();
 
 
 // Servo Positions:  Low,High
-int preset[][2] =  {{398, 112},  // head rotation
-                    {565, 188},	 // neck top
-                    {200, 400},	 // neck bottom
-                    {475, 230},	 // eye right
-                    {270, 440},	 // eye left
-                    {350, 185},	 // arm left
-                    {188, 360}, // arm right
-                    {150, 250},  // eyebrow left
-                    {570, 420}}; // eyebrow right
+int preset[][2] =  {{608,362},  // head rotation
+                    {645,148},  // neck top
+                    {100,470},  // neck bottom
+                    {265,330},  // eye right
+                    {260,160},  // eye left
+                    {600,375},  // arm left
+                    {428,600}, // arm right
+                    {290,170},  // eyebrow left
+                    {450,460}}; // eyebrow right
 
 // Rest position
-float restpos[7] = {50, 50, 40, 0, 0, 100, 100};
+float restpos[7] = {50, 50, 40, 0, 0, 100, 100, 0, 0};
 
 // Messages
 String messages1[7] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Right - ","Eye Left - ","Arm Left - ","Arm Right - "};

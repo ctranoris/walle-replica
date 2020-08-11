@@ -75,10 +75,10 @@ int preset[][2] =  {{608,362},  // head rotation
                     {450,460}}; // eyebrow right
 
 // Rest position
-float restpos[7] = {50, 50, 40, 0, 0, 100, 100, 0, 0};
+float restpos[9] = {50, 50, 40, 0, 0, 100, 100, 0, 0};
 
 // Messages
-String messages1[7] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Right - ","Eye Left - ","Arm Left - ","Arm Right - "};
+String messages1[9] = {"Head Rotation - ","Neck Top Joint - ","Neck Bottom Joint - ","Eye Right - ","Eye Left - ","Arm Left - ","Arm Right - ","Eyebrow Left - ","Eyebrow Right - "};
 String messages2[][2] = {{"LOW (head facing left)", "HIGH (head facing right)"},
                         {"LOW (head looking up)", "HIGH (head looking down)"},
                         {"LOW (head looking down)", "HIGH (head looking up)"},
@@ -86,8 +86,8 @@ String messages2[][2] = {{"LOW (head facing left)", "HIGH (head facing right)"},
                         {"LOW (eye rotated down)", "HIGH (eye rotated up)"},
                         {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
                         {"LOW (arm rotated down)", "HIGH (arm rotated up)"},
-                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"},
-                        {"LOW (eyebrow down)", "HIGH (eyebrow up)"}};
+                        {"LOW (eyebrow Left down)", "HIGH (eyebrow Left up)"},
+                        {"LOW (eyebrow Right down)", "HIGH (eyebrow Right up)"}};
 
 // Runtime Variables
 int currentServo = 0;

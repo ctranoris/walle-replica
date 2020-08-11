@@ -569,20 +569,25 @@ def DisplayBatteryLevel():
     elif (batteryLevelNorm>100):
     	batteryLevelNorm = 100
     
-    for y in range(10):
-    	draw.rectangle([(60, 25+y*5), (120, 30+y*5)], fill = "GREEN", outline = "BLACK")
     
     
-    draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
-    draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
+    #draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
+    #draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
 
     if (batteryLevelNorm>140):
-        draw.text((5, 104), 'Charging', fill = "BLUE", font = font)
+        draw.text((0, 110), 'Charging ' + str(batteryLevel), fill = "BLUE", font = font)
     elif (batteryLevelNorm<0):
-        draw.text((5, 104), 'Not Connected ' +  str(batteryLevel), fill = "RED", font = font)
+        draw.text((5, 110), 'Not Connected ' +  str(batteryLevel), fill = "RED", font = font)
     else:
-        draw.text((5, 104), str(batteryLevel) + '%', fill = "BLACK", font = font)
+        draw.text((5, 110), str(batteryLevel) + '%', fill = "WHITE", font = font)
 
+    bl = 0
+    for y in range(10, 0, -1):
+    	if (bl<=batteryLevelNorm-10):
+    		draw.rectangle([(60, 25+y*10), (120, 30+y*10)], fill = "YELLOW", outline = "BLACK")
+    	bl = bl + 10
+    	
+    	
     OLED.Display_Image(image)
 
 

@@ -563,13 +563,11 @@ def DisplayBatteryLevel():
     #draw.text((40, 96), 'B', fill = "BLUE", font = font)
     #draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
     
-    batteryLevelNorm = 0;
-    if (batteryLevel>140):
+    batteryLevelNorm = int(batteryLevel);
+    if (batteryLevelNorm>140):
     	batteryLevelNorm = 100
-    elif (batteryLevel>100):
+    elif (batteryLevelNorm>100):
     	batteryLevelNorm = 100
-    elif (batteryLevel>=0):
-    	batteryLevelNorm = batteryLevel
     
     for y in range(10):
     	draw.rectangle([(60, 25+y*5), (120, 30+y*5)], fill = "GREEN", outline = "BLACK")
@@ -578,9 +576,9 @@ def DisplayBatteryLevel():
     draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
     draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
 
-    if (batteryLevel>140):
+    if (batteryLevelNorm>140):
         draw.text((5, 104), 'Charging', fill = "BLUE", font = font)
-    elif (batteryLevel<0):
+    elif (batteryLevelNorm<0):
         draw.text((5, 104), 'Not Connected ' +  str(batteryLevel), fill = "RED", font = font)
     else:
         draw.text((5, 104), str(batteryLevel) + '%', fill = "BLACK", font = font)

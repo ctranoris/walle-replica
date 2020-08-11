@@ -547,30 +547,34 @@ def Display_Picture(File_Name):
 
 def DisplayBatteryLevel():
 	# oledFolder
-    image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
+    #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
+    image = Image.open( oledFolder + 'b100.jpg' )
     draw = ImageDraw.Draw(image)
-    font = ImageFont.truetype(oledFolder + 'cambriab.ttf',24)
+    font = ImageFont.truetype(oledFolder + 'cambriab.ttf',8)
 
-    draw.text((0, 12), 'Level:' + batteryLevel, fill = "BLUE", font = font)
+    draw.text((0, 12), 'Level:' + str(batteryLevel), fill = "BLUE", font = font)
     draw.text((0, 36), 'Electronic', fill = "BLUE",font = font)
     draw.text((20, 72), '1.5 inch', fill = "CYAN", font = font)
-    draw.text((10, 96), 'R', fill = "RED", font = font)
-    draw.text((25, 96), 'G', fill = "GREEN", font = font)
-    draw.text((40, 96), 'B', fill = "BLUE", font = font)
-    draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
+    #draw.text((10, 96), 'R', fill = "RED", font = font)
+    #draw.text((25, 96), 'G', fill = "GREEN", font = font)
+    #draw.text((40, 96), 'B', fill = "BLUE", font = font)
+    #draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
     
     batteryLevelNorm = 0;
-
-    if (batteryLevelNorm>140):
+    if (batteryLevel>140):
     	batteryLevelNorm = 100
-    	draw.text((0, 96), 'Charging', fill = "GREEN", font = font)
-    if (batteryLevelNorm>100):
+    elif (batteryLevel>100):
     	batteryLevelNorm = 100
-    elif (batteryLevelNorm>=0):
+    elif (batteryLevel>=0):
     	batteryLevelNorm = batteryLevel
     
-    draw.rectangle([(0, 100), (101, 121)], fill = "BLUE", outline = "BLUE")
-    draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "YELLOW", outline = None)
+    draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
+    draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
+
+    if (batteryLevelNorm>140):
+        draw.text((0, 104), 'Charging', fill = "BLUE", font = font)
+    else:
+        draw.text((0, 104), 'Not Connected', fill = "RED", font = font)
 
     OLED.Display_Image(image)
 

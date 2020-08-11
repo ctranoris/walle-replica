@@ -564,28 +564,29 @@ def DisplayBatteryLevel():
     #draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
     
     batteryLevelNorm = int(batteryLevel);
-    if (batteryLevelNorm>140):
-    	batteryLevelNorm = 100
-    elif (batteryLevelNorm>100):
-    	batteryLevelNorm = 100
-    
-    
     
     #draw.rectangle([(0, 100), (101, 121)], fill = None, outline = "GREEN")
     #draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "GREEN", outline = None)
 
-    if (batteryLevelNorm>140):
-        draw.text((0, 110), 'Charging ' + str(batteryLevel), fill = "BLUE", font = font)
+    if (batteryLevelNorm>110):
+        draw.text((0, 118), 'Charging ' + str(batteryLevel), fill = "BLUE", font = font)
+        batteryLevelNorm = 100
     elif (batteryLevelNorm<0):
-        draw.text((5, 110), 'Not Connected ' +  str(batteryLevel), fill = "RED", font = font)
+        draw.text((0, 118), 'No Con ' +  str(batteryLevel), fill = "RED", font = font)
+        batteryLevelNorm = 0
     else:
-        draw.text((5, 110), str(batteryLevel) + '%', fill = "WHITE", font = font)
+        draw.text((0, 118), str(batteryLevel) + '%', fill = "WHITE", font = font)
 
     bl = 0
-    for y in range(10, 0, -1):
-    	if (bl<=batteryLevelNorm-10):
-    		draw.rectangle([(60, 25+y*10), (120, 30+y*10)], fill = "YELLOW", outline = "BLACK")
+    for y in range(9, -1, -1):
+    	if (bl<batteryLevelNorm):
+    		draw.rectangle([(60, 25+y*10), (120, 34+y*10)], fill = "YELLOW", outline = "BLACK")
     	bl = bl + 10
+   
+    if (batteryLevelNorm<4):
+       draw.rectangle([(60, 116), (120, 127)], fill = "BLACK", outline = "RED")
+       draw.text((63, 116), 'WARNING!', fill = "RED", font = fontTitle)
+
     	
     	
     OLED.Display_Image(image)
@@ -646,13 +647,17 @@ def PlayMovie(File_Name):
 
 if __name__ == '__main__':
      #-------------OLED Init------------#
-	 OLED.Device_Init()	
-	 #thread = videoPlayer(1, "BandL")
-	 #thread.start()
-	 #videothreads.append(thread)	
-	 #PlayMovie('BandL')
-	 #app.run()
-	 PlayMovie('BandL')
-	 DisplayBatteryLevel()
-	 app.run(debug=False, host='0.0.0.0')
+	OLED.Device_Init()	
+	#thread = videoPlayer(1, "BandL")
+	#thread.start()
+	#videothreads.append(thread)	
+	#PlayMovie('BandL')
+	#app.run()
+	PlayMovie('BandL')
+	DisplayBatteryLevel()
+	#for y in range(120, -10, -2):
+	#	OLED.Delay(500)
+	#	batteryLevel=y
+	#	DisplayBatteryLevel()
+	app.run(debug=False, host='0.0.0.0')
   

@@ -119,6 +119,7 @@ def parseArduinoMessage(dataString):
 		dataList = dataString.split('_')
 		if len(dataList) > 1 and dataList[1].isdigit():
 			batteryLevel = dataList[1]
+			DisplayBatteryLevel();
 
 # Turn on/off the Arduino Thread system
 def onoff_arduino(q, portNum):
@@ -521,7 +522,6 @@ def arduinoStatus():
 	if action is not None:
 		if action == "battery":
 			if test_arduino():
-				DisplayBatteryLevel();
 				return jsonify({'status': 'OK','battery':batteryLevel})
 			else:
 				return jsonify({'status': 'Error','msg':'Arduino not connected'})
@@ -559,9 +559,15 @@ def DisplayBatteryLevel():
     draw.text((40, 96), 'B', fill = "BLUE", font = font)
     draw.text((55, 96), ' OLED', fill = "CYAN", font = font)
     
+    batteryLevelNorm = 0;
     batteryLevelNorm =batteryLevel;
-    if (batteryLevelNorm>100):
+    if (batteryLevel>140):
     	batteryLevelNorm = 100
+    	draw.text((0, 96), 'Charging', fill = "GREEN", font = font)
+    if (batteryLevel>100):
+    	batteryLevelNorm = 100
+    elif (batteryLevel>=0):
+    	batteryLevelNorm = batteryLevel
     
     draw.rectangle([(0, 100), (101, 121)], fill = "BLUE", outline = "BLUE")
     draw.rectangle([(1, 101), (batteryLevelNorm, 120)], fill = "YELLOW", outline = None)

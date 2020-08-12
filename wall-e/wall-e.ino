@@ -50,7 +50,7 @@
 #define BAT_L A2 			// Battery level detection analogue pin
 #ifdef BAT_L
 	#define BAT_MAX 11.1   // Maximum voltage
-	#define BAT_MIN 10.2   // Minimum voltage
+	#define BAT_MIN 9.8   // Minimum voltage
 	#define POT_DIV 0.4303 // Potential divider scaling factor
 #endif
 

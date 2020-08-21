@@ -549,7 +549,7 @@ def Display_Picture(File_Name):
     OLED.Display_Image(image)
 
 def DisplayBatteryLevel():
-	
+    global videoFlag
     if ( videoFlag ==1  ):
         return;
 	

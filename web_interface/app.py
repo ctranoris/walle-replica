@@ -591,7 +591,17 @@ def DisplayBatteryLevel():
     	
     OLED.Display_Image(image)
 
-
+def TryInitArduinoCon():
+	try:
+		ser = serial.Serial(usb_ports[0],115200)
+		if (ser.inWaiting() > 0):
+			ser.flushInput()
+		ser.close()
+		onoff_arduino(workQueue, portNum)
+		print("TryInitArduinoCon Connect to Arduino OK")
+	except:
+		print("TryInitArduinoCon:FAILED! Unable to connect to selected serial port")
+		
 def PlayMovie(File_Name):
 
    clip = soundFolder + File_Name + ".ogg"
@@ -645,6 +655,8 @@ def PlayMovie(File_Name):
            break
 
 
+
+
 if __name__ == '__main__':
      #-------------OLED Init------------#
 	OLED.Device_Init()	
@@ -654,6 +666,7 @@ if __name__ == '__main__':
 	#PlayMovie('BandL')
 	#app.run()
 	PlayMovie('BandL')
+	TryInitArduinoCon()
 	DisplayBatteryLevel()
 	#for y in range(120, -10, -2):
 	#	OLED.Delay(500)

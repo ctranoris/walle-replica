@@ -61,7 +61,7 @@ queueLock = threading.Lock()
 workQueue = queue.Queue()
 threads = []
 videothreads = []
-
+videoFlag = 0
 
 #############################################
 # Set up the multithreading stuff here
@@ -546,6 +546,10 @@ def Display_Picture(File_Name):
     OLED.Display_Image(image)
 
 def DisplayBatteryLevel():
+	
+    if ( videoFlag ==1  ):
+        return;
+	
     global batteryLevel
 	# oledFolder
     #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
@@ -603,7 +607,7 @@ def TryInitArduinoCon():
 		print("TryInitArduinoCon:FAILED! Unable to connect to selected serial port")
 		
 def PlayMovie(File_Name):
-
+   videoFlag = 1
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)
    pygame.mixer.music.load(clip)
@@ -651,6 +655,7 @@ def PlayMovie(File_Name):
                #print(1/(frameEnd-frameStart))
            frameCounter=frameCounter+1
        else:
+       	   videoFlag = 0
            print("Video end")
            break
 

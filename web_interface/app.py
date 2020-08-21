@@ -394,24 +394,26 @@ def animate():
 	clip = request.form.get('clip')
 	if clip is not None:
 		print("Animate:", clip)
-		if ( clip == '3'):
-			thread = videoPlayer(1, "BandL")
-			thread.start()
-			videothreads.append(thread)		
-			#PlayMovie('BandL')
+		if ( clip == '3'):			
+			PlayMovie('BandL')
+			#thread = videoPlayer(1, "BandL")
+			#thread.start()
+			#videothreads.append(thread)
 		if ( clip == '4'):	
-			thread = videoPlayer(1, "PutOnYourSundayClothes")
-			thread.start()
-			videothreads.append(thread)
+			PlayMovie('PutOnYourSundayClothes')
+			#thread = videoPlayer(1, "PutOnYourSundayClothes")
+			#thread.start()
+			#videothreads.append(thread)
 		if ( clip == '5'):	
-			thread = videoPlayer(1, "LaVieenRose")
-			thread.start()
-			videothreads.append(thread)
+			PlayMovie('LaVieenRose')
+			#thread = videoPlayer(1, "LaVieenRose")
+			#thread.start()
+			#videothreads.append(thread)
 		if ( clip == '6'):	
-			thread = videoPlayer(1, "DowntoEarth")
-			thread.start()
-			videothreads.append(thread)
-			#PlayMovie('PutOnYourSundayClothes')
+			PlayMovie('DowntoEarth')
+			#thread = videoPlayer(1, "DowntoEarth")
+			#thread.start()
+			#videothreads.append(thread)
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)
@@ -616,6 +618,10 @@ def TryInitArduinoCon():
 
 
 def PlayMovie(File_Name):
+	
+   if (videoFlag == 1):
+   	print("A video is already active")
+   	return;	
    videoFlag = 1
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)

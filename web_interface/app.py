@@ -486,6 +486,7 @@ def arduinoConnect():
 				port = request.form.get('port')
 				if port is not None and port.isdigit():
 					portNum = int(port)
+					print("Reconnect to portNum = " + portNum)
 					# Test whether connection to the selected port is possible
 					usb_ports = [
 						p.device

@@ -486,7 +486,7 @@ def arduinoConnect():
 				port = request.form.get('port')
 				if port is not None and port.isdigit():
 					portNum = int(port)
-					print("Reconnect to portNum = " + portNum)
+					print("Reconnect to portNum = " + str(portNum))
 					# Test whether connection to the selected port is possible
 					usb_ports = [
 						p.device
@@ -597,16 +597,24 @@ def DisplayBatteryLevel():
     OLED.Display_Image(image)
 
 def TryInitArduinoCon():
+	portNum = 0
+	usb_ports = [
+		p.device
+		for p in serial.tools.list_ports.comports()
+	]
+
 	try:
-		ser = serial.Serial(usb_ports[0],115200)
+		ser = serial.Serial(usb_ports[portNum],115200)
 		if (ser.inWaiting() > 0):
 			ser.flushInput()
 		ser.close()
 		onoff_arduino(workQueue, portNum)
 		print("TryInitArduinoCon Connect to Arduino OK")
-	except:
+	except Exception as e:
 		print("TryInitArduinoCon:FAILED! Unable to connect to selected serial port")
-		
+		print(e)
+
+
 def PlayMovie(File_Name):
    videoFlag = 1
    clip = soundFolder + File_Name + ".ogg"

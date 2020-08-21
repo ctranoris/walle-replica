@@ -62,7 +62,7 @@ workQueue = queue.Queue()
 threads = []
 videothreads = []
 videoFlag = 0
-
+stopVideo = 0
 #############################################
 # Set up the multithreading stuff here
 #############################################
@@ -618,10 +618,16 @@ def TryInitArduinoCon():
 
 
 def PlayMovie(File_Name):
-	
+
+   global videoFlag
+   global stopVideo
    if (videoFlag == 1):
-   	print("A video is already active")
-   	return;	
+    print("A video is already active")
+    stopVideo = 1
+    while ( stopVideo == 1):
+     print("Waiting to stop previous")
+     time.sleep(1)
+    
    videoFlag = 1
    clip = soundFolder + File_Name + ".ogg"
    print("Play music clip:", clip)
@@ -669,12 +675,17 @@ def PlayMovie(File_Name):
                frameEnd = time.time()
                #print(1/(frameEnd-frameStart))
            frameCounter=frameCounter+1
+           if ( stopVideo == 1):
+             stopVideo = 0
+             videoFlag = 0
+             break
        else:
        	   videoFlag = 0
+           stopVideo = 0
            print("Video end")
            break
 
-
+   stopVideo = 0
 
 
 if __name__ == '__main__':

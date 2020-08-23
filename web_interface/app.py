@@ -398,25 +398,25 @@ def animate():
 	if clip is not None:
 		print("Animate:", clip)
 		if ( clip == '3'):			
-			PlayMovie('BandL')
-			#thread = videoPlayer(1, "BandL")
-			#thread.start()
-			#videothreads.append(thread)
+			#PlayMovie('BandL')
+			thread = videoPlayer(1, "BandL")
+			thread.start()
+			videothreads.append(thread)
 		if ( clip == '4'):	
-			PlayMovie('PutOnYourSundayClothes')
-			#thread = videoPlayer(1, "PutOnYourSundayClothes")
-			#thread.start()
-			#videothreads.append(thread)
+			#PlayMovie('PutOnYourSundayClothes')
+			thread = videoPlayer(1, "PutOnYourSundayClothes")
+			thread.start()
+			videothreads.append(thread)
 		if ( clip == '5'):	
-			PlayMovie('LaVieenRose')
-			#thread = videoPlayer(1, "LaVieenRose")
-			#thread.start()
-			#videothreads.append(thread)
+			#PlayMovie('LaVieenRose')
+			thread = videoPlayer(1, "LaVieenRose")
+			thread.start()
+			videothreads.append(thread)
 		if ( clip == '6'):	
-			PlayMovie('DowntoEarth')
-			#thread = videoPlayer(1, "DowntoEarth")
-			#thread.start()
-			#videothreads.append(thread)
+			#PlayMovie('DowntoEarth')
+			thread = videoPlayer(1, "DowntoEarth")
+			thread.start()
+			videothreads.append(thread)
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)
@@ -694,12 +694,11 @@ def PlayMovie(File_Name):
 if __name__ == '__main__':
      #-------------OLED Init------------#
 	OLED.Device_Init()	
-	#thread = videoPlayer(1, "BandL")
-	#thread.start()
-	#videothreads.append(thread)	
+	thread = videoPlayer(1, "BandL")
+	thread.start()
+	videothreads.append(thread)	
+	
 	#PlayMovie('BandL')
-	#app.run()
-	PlayMovie('BandL')
 	TryInitArduinoCon()
 	DisplayBatteryLevel()
 	#for y in range(120, -10, -2):

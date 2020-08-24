@@ -106,7 +106,7 @@ def process_data(threadName, q, port):
 					dataString += data.decode()
 			if (videoFlag == 1):
 				print("A video is already active,sleeping queue")
-				time.sleep(1)
+				time.sleep(0.250)
 		# If an error occured in the Arduino Communication
 		except Exception as e: 
 			print(e)

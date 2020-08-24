@@ -418,6 +418,26 @@ def animate():
 			thread = videoPlayer(1, "DowntoEarth")
 			thread.start()
 			videothreads.append(thread)
+		if ( clip == '7'):	
+			#PlayMovie('WALL-E-Trailer')
+			thread = videoPlayer(1, "WALL-E-Trailer")
+			thread.start()
+			videothreads.append(thread)
+		if ( clip == '8'):	
+			#PlayMovie('WALL-E-TrailerGR')
+			thread = videoPlayer(1, "WALL-E-TrailerGR")
+			thread.start()
+			videothreads.append(thread)
+		if ( clip == '9'):	
+			#PlayMovie('WALL-EVignettes')
+			thread = videoPlayer(1, "WALL-EVignettes")
+			thread.start()
+			videothreads.append(thread)
+		if ( clip == '10'):	
+			#PlayMovie('WALL-E-Ending')
+			thread = videoPlayer(1, "WALL-E-Ending")
+			thread.start()
+			videothreads.append(thread)
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)

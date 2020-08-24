@@ -291,7 +291,8 @@ def motor():
 	stickX =  request.form.get('stickX')
 	stickY =  request.form.get('stickY')
 	if stickX is not None and stickY is not None:
-		xVal = int(float(stickX)*100)
+		#I need to reverse X
+		xVal = int( - float(stickX)*100)
 		yVal = int(float(stickY)*100)
 		print("Motors:", xVal, ",", yVal)
 		if test_arduino() == 1:

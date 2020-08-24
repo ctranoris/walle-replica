@@ -438,6 +438,11 @@ def animate():
 			thread = videoPlayer(1, "WALL-E-Ending")
 			thread.start()
 			videothreads.append(thread)
+		if ( clip == '11'):	
+			#PlayMovie('WallEMeetsEve')
+			thread = videoPlayer(1, "WallEMeetsEve")
+			thread.start()
+			videothreads.append(thread)
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)

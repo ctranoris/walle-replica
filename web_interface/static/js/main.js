@@ -795,6 +795,41 @@ function sendMovementValues() {
 }
 
 
+function sendlanguage() {
+	
+	var lang = $('#port-select option:selected').val();
+	var txt = $('#language-text').val();
+	alert(lang + ", " + txt);
+	
+	// Send data to python app, so that it can be passed on
+	$.ajax({
+		url: "/tts",
+		type: "POST",
+		data: {"lang" : lang, "txt": txt},
+		dataType: "json",
+		success: function(data){
+			// If a response is received from the python backend, but it contains an error
+			if(data.status == "Error"){
+				showAlert(1, 'Error!', data.msg, 1);
+				return 0;
+			
+			// Else if response is all good
+			} else {
+				showAlert(0, 'Success!', 'Text to speak send.', 1);
+				
+
+				return 1;
+			}
+		},
+		error: function(error) {
+			// If no response was recevied from the python backend, show an "unknown" error
+			showAlert(1, 'Unknown Error!', 'Unable to send Text to speak.', 1);
+			
+			return 0;
+		}
+	});
+}
+
 /*
  * This function is run once when the page is loading
  */

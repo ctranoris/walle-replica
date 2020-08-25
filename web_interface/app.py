@@ -398,6 +398,26 @@ def audio():
 	else:
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
+
+# Play TTS
+@app.route('/tts', methods=['POST'])
+def tts():
+	if session.get('active') != True:
+		return redirect(url_for('login'))
+
+	lng =  request.form.get('lang')
+	txt =  request.form.get('txt')
+	if txt is not None:		
+		tts = gtts.gTTS( txt , lang= lng)
+		clip = soundFolder + "txt.mp3"
+		tts.save(clip)
+		print("Play TTS clip:", clip)
+		pygame.mixer.music.load(clip)
+		pygame.mixer.music.play()	
+		return jsonify({'status': 'OK' })
+	else:
+		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
+	
 # Animate
 @app.route('/animate', methods=['POST'])
 def animate():
@@ -736,7 +756,7 @@ if __name__ == '__main__':
 	#DisplayBatteryLevel()
 	
 	# make request to google to get synthesis
-	print(gtts.lang.tts_langs())
+	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
 	tts = gtts.gTTS("Γεια σου στέλιο", lang="el")
 	clip = soundFolder + "txt.mp3"

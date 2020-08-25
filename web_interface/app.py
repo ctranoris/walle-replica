@@ -106,7 +106,7 @@ def process_data(threadName, q, port):
 					dataString += data.decode()
 			if (videoFlag == 1):
 				print("A video is already active,sleeping queue")
-				time.sleep(0.250)
+				time.sleep(0.100)
 		# If an error occured in the Arduino Communication
 		except Exception as e: 
 			print(e)
@@ -120,7 +120,15 @@ def parseArduinoMessage(dataString):
 	# Battery level message
 	if "Battery" in dataString:
 		dataList = dataString.split('_')
-		if len(dataList) > 1 and dataList[1].isdigit():
+		
+		print("len(dataList)=" + str(len(dataList)) )
+		try:
+			int(dataList[1])
+			is_dig = True
+		except ValueError:
+			is_dig = False
+
+		if len(dataList) > 1 and is_dig:
 			batteryLevel = dataList[1]
 			DisplayBatteryLevel();
 
@@ -581,7 +589,7 @@ def DisplayBatteryLevel():
     global videoFlag
     if ( videoFlag ==1  ):
         return;
-	
+    print("Will DisplayBatteryLevel")	
     global batteryLevel
 	# oledFolder
     #image = Image.new("RGB", (OLED.SSD1351_WIDTH, OLED.SSD1351_HEIGHT), "BLACK")
@@ -608,7 +616,7 @@ def DisplayBatteryLevel():
         draw.text((0, 118), 'Charging ' + str(batteryLevel), fill = "BLUE", font = font)
         batteryLevelNorm = 100
     elif (batteryLevelNorm<0):
-        draw.text((0, 118), 'No Con ' +  str(batteryLevel), fill = "RED", font = font)
+        draw.text((0, 118), 'ERR:No Con ' +  str(batteryLevel), fill = "RED", font = font)
         batteryLevelNorm = 0
     else:
         draw.text((0, 118), str(batteryLevel) + '%', fill = "WHITE", font = font)
@@ -621,7 +629,7 @@ def DisplayBatteryLevel():
    
     if (batteryLevelNorm<4):
        draw.rectangle([(60, 116), (120, 127)], fill = "BLACK", outline = "RED")
-       draw.text((63, 116), 'WARNING!', fill = "RED", font = fontTitle)
+       draw.text((64, 116), 'WARNING!', fill = "RED", font = fontTitle)
 
     	
     	
@@ -702,7 +710,7 @@ def PlayMovie(File_Name):
                screenframe = Image.fromarray(resized)
                OLED.Display_Image(screenframe)
                frameEnd = time.time()
-               #print(1/(frameEnd-frameStart))
+               print(1/(frameEnd-frameStart))
            frameCounter=frameCounter+1
            if ( stopVideo == 1):
              stopVideo = 0

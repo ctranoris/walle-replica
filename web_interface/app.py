@@ -28,6 +28,7 @@ import cv2
 import numpy as np
 import time
 
+import gtts
 
 
 app = Flask(__name__)
@@ -732,12 +733,14 @@ if __name__ == '__main__':
 	thread.start()
 	videothreads.append(thread)	
 	
-	#PlayMovie('BandL')
 	TryInitArduinoCon()
 	DisplayBatteryLevel()
-	#for y in range(120, -10, -2):
-	#	OLED.Delay(500)
-	#	batteryLevel=y
-	#	DisplayBatteryLevel()
 	app.run(debug=False, host='0.0.0.0')
-  
+	
+	# make request to google to get synthesis
+	tts = gtts.gTTS("Hello world wall-e")
+	#tts = gtts.gTTS("Hola Mundo", lang="es")
+	tts.save("txt.mp3")
+	print("Play music clip:", "txt.mp3")
+	pygame.mixer.music.load(clip)
+	pygame.mixer.music.play()

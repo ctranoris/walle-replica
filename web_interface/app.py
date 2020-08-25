@@ -729,18 +729,20 @@ def PlayMovie(File_Name):
 if __name__ == '__main__':
      #-------------OLED Init------------#
 	OLED.Device_Init()	
-	thread = videoPlayer(1, "BandL")
-	thread.start()
-	videothreads.append(thread)	
-	
-	TryInitArduinoCon()
-	DisplayBatteryLevel()
-	app.run(debug=False, host='0.0.0.0')
+	#thread = videoPlayer(1, "BandL")
+	#thread.start()
+	#videothreads.append(thread)	
+	#TryInitArduinoCon()
+	#DisplayBatteryLevel()
 	
 	# make request to google to get synthesis
-	tts = gtts.gTTS("Hello world wall-e")
-	#tts = gtts.gTTS("Hola Mundo", lang="es")
-	tts.save("txt.mp3")
-	print("Play music clip:", "txt.mp3")
+	print(gtts.lang.tts_langs())
+	#tts = gtts.gTTS("Hello world wall-e")
+	tts = gtts.gTTS("Γεια σου στέλιο", lang="el")
+	clip = soundFolder + "txt.mp3"
+	tts.save(clip)
+	print("Play music clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
+
+	app.run(debug=False, host='0.0.0.0')

@@ -31,6 +31,11 @@ import time
 import gtts
 
 
+import getopt
+import scipy.io.wavfile as wavfile
+import math
+import sys
+
 app = Flask(__name__)
 
 
@@ -746,23 +751,151 @@ def PlayMovie(File_Name):
    stopVideo = 0
 
 
+
+
+
+
+"""
+Constants
+"""
+
+# Diode constants (must be below 1; paper uses 0.2 and 0.4)
+VB = 0.2
+VL = 0.4
+
+# Controls distortion
+H = 4
+
+# Controls N samples in lookup table; probably leave this alone
+LOOKUP_SAMPLES = 1024
+
+# Frequency (in Hz) of modulating frequency
+MOD_F = 50
+
+def diode_lookup(n_samples):
+    result = np.zeros((n_samples,))
+    for i in range(0, n_samples):
+        v = float(i - float(n_samples)/2)/(n_samples/2)
+        v = abs(v)
+        if v < VB:
+            result[i] = 0
+        elif VB < v <= VL:
+            result[i] = H * ((v - VB)**2)/(2*VL - 2*VB)
+        else:
+            result[i] = H*v - H*VL + (H*(VL-VB)**2)/(2*VL-2*VB)
+
+    return result
+
+def raw_diode(signal):
+    result = np.zeros(signal.shape)
+    for i in range(0, signal.shape[0]):
+        v = signal[i]
+        if v < VB:
+            result[i] = 0
+        elif VB < v <= VL:
+            result[i] = H * ((v - VB)**2)/(2*VL - 2*VB)
+    else:
+        result[i] = H*v - H*VL + (H*(VL-VB)**2)/(2*VL-2*VB)
+    return result
+
+
+def readmp3(f, normalized=False):
+    """MP3 to numpy array"""
+    a = pydub.AudioSegment.from_mp3(f)
+    y = np.array(a.get_array_of_samples())
+    if a.channels == 2:
+        y = y.reshape((-1, 2))
+    if normalized:
+        return a.frame_rate, np.float32(y) / 2**15
+    else:
+        return a.frame_rate, y
+
+def writemp3(f, sr, x, normalized=False):
+    """numpy array to MP3"""
+    channels = 2 if (x.ndim == 2 and x.shape[1] == 2) else 1
+    if normalized:  # normalized array - each item should be a float in [-1, 1)
+        y = np.int16(x * 2 ** 15)
+    else:
+        y = np.int16(x)
+    song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
+    song.export(f, format="mp3", bitrate="320k")
+    
+    
 if __name__ == '__main__':
-     #-------------OLED Init------------#
+	#-------------OLED Init------------#
 	OLED.Device_Init()	
-	#thread = videoPlayer(1, "BandL")
-	#thread.start()
-	#videothreads.append(thread)	
-	#TryInitArduinoCon()
-	#DisplayBatteryLevel()
+	thread = videoPlayer(1, "BandL")
+	thread.start()
+	videothreads.append(thread)	
+	TryInitArduinoCon()
+	DisplayBatteryLevel()
 	
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
-	tts = gtts.gTTS("Î“ÎµÎ¹Î± ÏƒÎ¿Ï… ÏƒÏ„Î­Î»Î¹Î¿", lang="el")
+	tts = gtts.gTTS("Ãåéá óïõ ìå ëÝíå Ãïõüëõ!", lang="el")
 	clip = soundFolder + "txt.mp3"
 	tts.save(clip)
 	print("Play music clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
 
+	"""
+    Program to make a robot voice by simulating a ring modulator;
+    procedure/math taken from
+    http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
+    """
+	rate, data = readmp3(clip) #wavfile.read(clip)
+	data = data[:,1]
+
+	# get max value to scale to original volume at the end
+	scaler = np.max(np.abs(data))
+
+	# Normalize to floats in range -1.0 < data < 1.0
+	data = data.astype(np.float)/scaler
+
+	# Length of array (number of samples)
+	n_samples = data.shape[0]
+
+	# Create the lookup table for simulating the diode.
+	d_lookup = diode_lookup(LOOKUP_SAMPLES)
+	diode = Waveshaper(d_lookup)
+
+	# Simulate sine wave of frequency MOD_F (in Hz)
+	tone = np.arange(n_samples)
+	tone = np.sin(2*np.pi*tone*MOD_F/rate)
+
+	# Gain tone by 1/2
+	tone = tone * 0.5
+
+	# Junctions here
+	tone2 = tone.copy() # to top path
+	data2 = data.copy() # to bottom path
+
+	# Invert tone, sum paths
+	tone = -tone + data2 # bottom path
+	data = data + tone2 #top path
+
+	#top
+	data = diode.transform(data) + diode.transform(-data)
+
+	#bottom
+	tone = diode.transform(tone) + diode.transform(-tone)
+
+	result = data - tone
+
+	#scale to +-1.0
+	result /= np.max(np.abs(result))
+	#now scale to max value of input file.
+	result *= scaler
+	# wavfile.write wants ints between +-5000; hence the cast
+	#wavfile.write(clip, rate, result.astype(np.int16))
+	writemp3(clip, rate, result.astype(np.int16))
+    
+    
+	print("Play music clip:", clip)
+	pygame.mixer.music.load(clip)
+	pygame.mixer.music.play()
+    
+    
 	app.run(debug=False, host='0.0.0.0')

@@ -878,11 +878,11 @@ def raw_diode(signal):
 if __name__ == '__main__':
 	#-------------OLED Init------------#
 	OLED.Device_Init()	
-	#thread = videoPlayer(1, "BandL")
-	#thread.start()
-	#videothreads.append(thread)	
-	#TryInitArduinoCon()
-	#DisplayBatteryLevel()
+	thread = videoPlayer(1, "BandL")
+	thread.start()
+	videothreads.append(thread)	
+	TryInitArduinoCon()
+	DisplayBatteryLevel()
 	
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())

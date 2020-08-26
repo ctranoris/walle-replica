@@ -904,7 +904,7 @@ if __name__ == '__main__':
     procedure/math taken from
     http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
     """
-	rate, data = readmp3(clip,true) #wavfile.read(clip)
+	rate, data = readmp3(clip,True) #wavfile.read(clip)
 	print(data)
 	data = data[:,1]
 
@@ -950,7 +950,7 @@ if __name__ == '__main__':
 	result *= scaler
 	# wavfile.write wants ints between +-5000; hence the cast
 	#wavfile.write(clip, rate, result.astype(np.int16))
-	writemp3(clip, rate, result.astype(np.int16), true)
+	writemp3(clip, rate, result.astype(np.int16), True)
     
     
 	print("Play music clip:", clip)

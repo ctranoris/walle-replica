@@ -797,7 +797,7 @@ function sendMovementValues() {
 
 function sendlanguage() {
 	
-	var lang = $('#port-select option:selected').val();
+	var lang = $('#language-select option:selected').val();
 	var txt = $('#language-text').val();
 	alert(lang + ", " + txt);
 	

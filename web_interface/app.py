@@ -892,18 +892,19 @@ if __name__ == '__main__':
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
+	"""
 	tts = gtts.gTTS("Γειά σου, με λένε Γουόλυ", lang="el")
 	clip = soundFolder + "txt.mp3"
 	tts.save(clip)
 	print("Play music clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
+	"""
 
 	"""
     Program to make a robot voice by simulating a ring modulator;
     procedure/math taken from
     http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
-    """
 	rate, data = readmp3(clip,True) #wavfile.read(clip)
 	print(data)
 	data = data[:,1]
@@ -957,5 +958,6 @@ if __name__ == '__main__':
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
     
+    """
     
 	app.run(debug=False, host='0.0.0.0')

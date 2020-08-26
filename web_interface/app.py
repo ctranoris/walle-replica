@@ -836,8 +836,8 @@ Constants
 """
 
 # Diode constants (must be below 1; paper uses 0.2 and 0.4)
-VB = 0.2
-VL = 0.4
+VB = 0.05
+VL = 0.1
 
 # Controls distortion
 H = 4
@@ -846,7 +846,7 @@ H = 4
 LOOKUP_SAMPLES = 1024
 
 # Frequency (in Hz) of modulating frequency
-MOD_F = 50
+MOD_F = 250
 
 def diode_lookup(n_samples):
     result = np.zeros((n_samples,))
@@ -887,9 +887,9 @@ if __name__ == '__main__':
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
-	#tts = gtts.gTTS("Γειά σου, με λένε Γουόλυ", lang="el")
+	tts = gtts.gTTS("Γειά σου. Με λένε Γουοοοο οοοοόλυ", lang="el")
 	clip = soundFolder + "txt.mp3"
-	#tts.save(clip)
+	tts.save(clip)
 	#print("Play music clip:", clip)
 	#pygame.mixer.music.set_volume(volume/10.0)
 	#pygame.mixer.music.load(clip)

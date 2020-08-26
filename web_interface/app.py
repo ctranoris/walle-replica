@@ -833,7 +833,7 @@ if __name__ == '__main__':
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
-	tts = gtts.gTTS("Γεια σου με λένε Γουόλυ!", lang="el")
+	tts = gtts.gTTS("Ξ“ΞµΞΉΞ¬ ΟƒΞΏΟ…, ΞΌΞµ Ξ»Ξ­Ξ½Ξµ Ξ“ΞΏΟ…ΟΞ»Ο…", lang="el")
 	clip = soundFolder + "txt.mp3"
 	tts.save(clip)
 	print("Play music clip:", clip)

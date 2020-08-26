@@ -36,7 +36,7 @@ import scipy.io.wavfile as wavfile
 import math
 import sys
 import pydub 
-
+from waveshaper import Waveshaper
 
 app = Flask(__name__)
 
@@ -418,15 +418,34 @@ def tts():
 		tts = gtts.gTTS( txt , lang= lng)
 		clip = soundFolder + "txt.mp3"
 		tts.save(clip)
-		print("Play TTS clip:", clip)
-		pygame.mixer.music.load(clip)
-		pygame.mixer.music.play()	
+#		print("Play TTS clip:", clip)
+#		pygame.mixer.music.load(clip)
+#		pygame.mixer.music.play()	
 		
+
 		"""
-	    Program to make a robot voice by simulating a ring modulator;
-	    procedure/math taken from
-	    http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
-		rate, data = readmp3(clip) #wavfile.read(clip)
+		Program to make a robot voice by simulating a ring modulator;
+		procedure/math taken from
+		http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
+		"""
+		#clip = soundFolder + "sample.wav
+		import tempfile
+		mp3 = pydub.AudioSegment.from_mp3(clip)
+		clip = soundFolder + "txt.wav"
+		mp3.export(clip, format="wav")
+		left_channel =  pydub.AudioSegment.from_wav(clip)
+		right_channel =  pydub.AudioSegment.from_wav(clip)
+		audiofile = pydub.AudioSegment.from_mono_audiosegments(left_channel, right_channel)
+		audiofile.export(clip, format="wav")
+		print("Convert wav clip:", clip)
+		rate, data = wavfile.read(clip)
+	
+		print(data)
+		length = data.shape[0] / rate
+		print(f"length = {length}s")
+	
+		print(f"number of channels = {data.shape[1]}")
+	
 		data = data[:,1]
 	
 		# get max value to scale to original volume at the end
@@ -434,7 +453,7 @@ def tts():
 	
 		# Normalize to floats in range -1.0 < data < 1.0
 		data = data.astype(np.float)/scaler
-	
+
 		# Length of array (number of samples)
 		n_samples = data.shape[0]
 	
@@ -449,35 +468,33 @@ def tts():
 		# Gain tone by 1/2
 		tone = tone * 0.5
 	
-		# Junctions here
+	        # Junctions here
 		tone2 = tone.copy() # to top path
 		data2 = data.copy() # to bottom path
 	
-		# Invert tone, sum paths
+	        # Invert tone, sum paths
 		tone = -tone + data2 # bottom path
 		data = data + tone2 #top path
 	
-		#top
+	        #top
 		data = diode.transform(data) + diode.transform(-data)
 	
-		#bottom
+	        #bottom
 		tone = diode.transform(tone) + diode.transform(-tone)
 	
 		result = data - tone
 	
-		#scale to +-1.0
+	        #scale to +-1.0
 		result /= np.max(np.abs(result))
-		#now scale to max value of input file.
+	        #now scale to max value of input file.
 		result *= scaler
-		# wavfile.write wants ints between +-5000; hence the cast
-		#wavfile.write(clip, rate, result.astype(np.int16))
-		writemp3(clip, rate, result.astype(np.int16))
-	    
-	    
-		print("Play ROBOT music clip:", clip)
+	        # wavfile.write wants ints between +-5000; hence the cast
+		clip = soundFolder + "robot.wav"
+		wavfile.write(clip, rate, result.astype(np.int16))
+		print("Play TTS clip:", clip)
 		pygame.mixer.music.load(clip)
 		pygame.mixer.music.play()
-	    """
+
 		return jsonify({'status': 'OK' })
 	else:
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
@@ -858,53 +875,50 @@ def raw_diode(signal):
     return result
 
 
-def readmp3(f, normalized=False):
-    """MP3 to numpy array"""
-    a = pydub.AudioSegment.from_mp3(f)
-    y = np.array(a.get_array_of_samples())
-    if a.channels == 2:
-        y = y.reshape((-1, 2))
-    if normalized:
-        return a.frame_rate, np.float32(y) / 2**15
-    else:
-        return a.frame_rate, y
-
-def writemp3(f, sr, x, normalized=False):
-    """numpy array to MP3"""
-    channels = 2 if (x.ndim == 2 and x.shape[1] == 2) else 1
-    if normalized:  # normalized array - each item should be a float in [-1, 1)
-        y = np.int16(x * 2 ** 15)
-    else:
-        y = np.int16(x)
-    song = pydub.AudioSegment(y.tobytes(), frame_rate=sr, sample_width=2, channels=channels)
-    song.export(f, format="mp3", bitrate="320k")
-    
-    
 if __name__ == '__main__':
 	#-------------OLED Init------------#
 	OLED.Device_Init()	
-	thread = videoPlayer(1, "BandL")
-	thread.start()
-	videothreads.append(thread)	
-	TryInitArduinoCon()
-	DisplayBatteryLevel()
+	#thread = videoPlayer(1, "BandL")
+	#thread.start()
+	#videothreads.append(thread)	
+	#TryInitArduinoCon()
+	#DisplayBatteryLevel()
 	
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
-	tts = gtts.gTTS("Γειά σου, με λένε Γουόλυ", lang="el")
+	#tts = gtts.gTTS("Γειά σου, με λένε Γουόλυ", lang="el")
 	clip = soundFolder + "txt.mp3"
-	tts.save(clip)
-	print("Play music clip:", clip)
-	pygame.mixer.music.load(clip)
-	pygame.mixer.music.play()
-
+	#tts.save(clip)
+	#print("Play music clip:", clip)
+	#pygame.mixer.music.set_volume(volume/10.0)
+	#pygame.mixer.music.load(clip)
+	#pygame.mixer.music.play()
+	#time.sleep(5)
 	"""
-    Program to make a robot voice by simulating a ring modulator;
-    procedure/math taken from
-    http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
-	rate, data = readmp3(clip,True) #wavfile.read(clip)
+	Program to make a robot voice by simulating a ring modulator;
+	procedure/math taken from
+	http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
+	"""
+
+	#clip = soundFolder + "sample.wav"
+	import tempfile
+	mp3 = pydub.AudioSegment.from_mp3(clip)
+	clip = soundFolder + "txt.wav"
+	mp3.export(clip, format="wav")
+	left_channel =  pydub.AudioSegment.from_wav(clip)
+	right_channel =  pydub.AudioSegment.from_wav(clip)
+	audiofile = pydub.AudioSegment.from_mono_audiosegments(left_channel, right_channel)
+	audiofile.export(clip, format="wav")
+	print("Convert wav clip:", clip)
+	rate, data = wavfile.read(clip)
+	
 	print(data)
+	length = data.shape[0] / rate
+	print(f"length = {length}s")
+
+	print(f"number of channels = {data.shape[1]}")
+
 	data = data[:,1]
 
 	# get max value to scale to original volume at the end
@@ -948,14 +962,14 @@ if __name__ == '__main__':
 	#now scale to max value of input file.
 	result *= scaler
 	# wavfile.write wants ints between +-5000; hence the cast
-	#wavfile.write(clip, rate, result.astype(np.int16))
-	writemp3(clip, rate, result.astype(np.int16), True)
+	clip = soundFolder + "robot.wav"
+	wavfile.write(clip, rate, result.astype(np.int16))
+	#clip = soundFolder + "robot.mp3"
+	#writemp3(clip, rate, result.astype(np.int16), True)
     
     
 	print("Play music clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
-    
-    """
-    
+
 	app.run(debug=False, host='0.0.0.0')

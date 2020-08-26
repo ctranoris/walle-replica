@@ -426,7 +426,6 @@ def tts():
 	    Program to make a robot voice by simulating a ring modulator;
 	    procedure/math taken from
 	    http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
-	    """
 		rate, data = readmp3(clip) #wavfile.read(clip)
 		data = data[:,1]
 	
@@ -478,6 +477,7 @@ def tts():
 		print("Play ROBOT music clip:", clip)
 		pygame.mixer.music.load(clip)
 		pygame.mixer.music.play()
+	    """
 		return jsonify({'status': 'OK' })
 	else:
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
@@ -892,14 +892,12 @@ if __name__ == '__main__':
 	# make request to google to get synthesis
 	#print(gtts.lang.tts_langs())
 	#tts = gtts.gTTS("Hello world wall-e")
-	"""
 	tts = gtts.gTTS("Γειά σου, με λένε Γουόλυ", lang="el")
 	clip = soundFolder + "txt.mp3"
 	tts.save(clip)
 	print("Play music clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
-	"""
 
 	"""
     Program to make a robot voice by simulating a ring modulator;

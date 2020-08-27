@@ -799,7 +799,7 @@ function sendlanguage() {
 	
 	var lang = $('#language-select option:selected').val();
 	var txt = $('#language-text').val();
-	alert(lang + ", " + txt);
+	//alert(lang + ", " + txt);
 	
 	// Send data to python app, so that it can be passed on
 	$.ajax({

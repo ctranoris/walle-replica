@@ -56,6 +56,19 @@ HEIGHT = 128 # Change to 32 depending on your screen resolution
 ##########################################
 
 
+
+#------------ Constants for robot VOICE-----------------#
+# Diode constants (must be below 1; paper uses 0.2 and 0.4)
+VB = 0.05
+VL = 0.1
+# Controls distortion
+H = 4
+# Controls N samples in lookup table; probably leave this alone
+LOOKUP_SAMPLES = 1024
+# Frequency (in Hz) of modulating frequency
+MOD_F = 250
+
+
 # Start sound mixer
 pygame.mixer.init()
 
@@ -415,86 +428,7 @@ def tts():
 	lng =  request.form.get('lang')
 	txt =  request.form.get('txt')
 	if txt is not None:		
-		tts = gtts.gTTS( txt , lang= lng)
-		clip = soundFolder + "txt.mp3"
-		tts.save(clip)
-#		print("Play TTS clip:", clip)
-#		pygame.mixer.music.load(clip)
-#		pygame.mixer.music.play()	
-		
-
-		"""
-		Program to make a robot voice by simulating a ring modulator;
-		procedure/math taken from
-		http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
-		"""
-		#clip = soundFolder + "sample.wav
-		import tempfile
-		mp3 = pydub.AudioSegment.from_mp3(clip)
-		clip = soundFolder + "txt.wav"
-		mp3.export(clip, format="wav")
-		left_channel =  pydub.AudioSegment.from_wav(clip)
-		right_channel =  pydub.AudioSegment.from_wav(clip)
-		audiofile = pydub.AudioSegment.from_mono_audiosegments(left_channel, right_channel)
-		audiofile.export(clip, format="wav")
-		print("Convert wav clip:", clip)
-		rate, data = wavfile.read(clip)
-	
-		print(data)
-		length = data.shape[0] / rate
-		print(f"length = {length}s")
-	
-		print(f"number of channels = {data.shape[1]}")
-	
-		data = data[:,1]
-	
-		# get max value to scale to original volume at the end
-		scaler = np.max(np.abs(data))
-	
-		# Normalize to floats in range -1.0 < data < 1.0
-		data = data.astype(np.float)/scaler
-
-		# Length of array (number of samples)
-		n_samples = data.shape[0]
-	
-		# Create the lookup table for simulating the diode.
-		d_lookup = diode_lookup(LOOKUP_SAMPLES)
-		diode = Waveshaper(d_lookup)
-	
-		# Simulate sine wave of frequency MOD_F (in Hz)
-		tone = np.arange(n_samples)
-		tone = np.sin(2*np.pi*tone*MOD_F/rate)
-	
-		# Gain tone by 1/2
-		tone = tone * 0.5
-	
-	        # Junctions here
-		tone2 = tone.copy() # to top path
-		data2 = data.copy() # to bottom path
-	
-	        # Invert tone, sum paths
-		tone = -tone + data2 # bottom path
-		data = data + tone2 #top path
-	
-	        #top
-		data = diode.transform(data) + diode.transform(-data)
-	
-	        #bottom
-		tone = diode.transform(tone) + diode.transform(-tone)
-	
-		result = data - tone
-	
-	        #scale to +-1.0
-		result /= np.max(np.abs(result))
-	        #now scale to max value of input file.
-		result *= scaler
-	        # wavfile.write wants ints between +-5000; hence the cast
-		clip = soundFolder + "robot.wav"
-		wavfile.write(clip, rate, result.astype(np.int16))
-		print("Play TTS clip:", clip)
-		pygame.mixer.music.load(clip)
-		pygame.mixer.music.play()
-
+		robotvoice(lng, txt)
 		return jsonify({'status': 'OK' })
 	else:
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
@@ -830,24 +764,6 @@ def PlayMovie(File_Name):
 
 
 
-
-"""
-Constants
-"""
-
-# Diode constants (must be below 1; paper uses 0.2 and 0.4)
-VB = 0.05
-VL = 0.1
-
-# Controls distortion
-H = 4
-
-# Controls N samples in lookup table; probably leave this alone
-LOOKUP_SAMPLES = 1024
-
-# Frequency (in Hz) of modulating frequency
-MOD_F = 250
-
 def diode_lookup(n_samples):
     result = np.zeros((n_samples,))
     for i in range(0, n_samples):
@@ -875,33 +791,18 @@ def raw_diode(signal):
     return result
 
 
-if __name__ == '__main__':
-	#-------------OLED Init------------#
-	OLED.Device_Init()	
-	thread = videoPlayer(1, "BandL")
-	thread.start()
-	videothreads.append(thread)	
-	TryInitArduinoCon()
-	DisplayBatteryLevel()
-	
-	# make request to google to get synthesis
-	#print(gtts.lang.tts_langs())
-	#tts = gtts.gTTS("Hello world wall-e")
-	tts = gtts.gTTS("Γειά σου. Με λένε Γουοοοο οοοοόλυ", lang="el")
+def robotvoice(lng, txt):
+	tts = gtts.gTTS( txt , lang= lng)
 	clip = soundFolder + "txt.mp3"
 	tts.save(clip)
-	#print("Play music clip:", clip)
-	#pygame.mixer.music.set_volume(volume/10.0)
-	#pygame.mixer.music.load(clip)
-	#pygame.mixer.music.play()
-	#time.sleep(5)
+	
+
 	"""
 	Program to make a robot voice by simulating a ring modulator;
 	procedure/math taken from
 	http://recherche.ircam.fr/pub/dafx11/Papers/66_e.pdf
 	"""
-
-	#clip = soundFolder + "sample.wav"
+	#clip = soundFolder + "sample.wav
 	import tempfile
 	mp3 = pydub.AudioSegment.from_mp3(clip)
 	clip = soundFolder + "txt.wav"
@@ -912,7 +813,7 @@ if __name__ == '__main__':
 	audiofile.export(clip, format="wav")
 	print("Convert wav clip:", clip)
 	rate, data = wavfile.read(clip)
-	
+
 	print(data)
 	length = data.shape[0] / rate
 	print(f"length = {length}s")
@@ -941,35 +842,42 @@ if __name__ == '__main__':
 	# Gain tone by 1/2
 	tone = tone * 0.5
 
-	# Junctions here
+        # Junctions here
 	tone2 = tone.copy() # to top path
 	data2 = data.copy() # to bottom path
 
-	# Invert tone, sum paths
+        # Invert tone, sum paths
 	tone = -tone + data2 # bottom path
 	data = data + tone2 #top path
 
-	#top
+        #top
 	data = diode.transform(data) + diode.transform(-data)
 
-	#bottom
+        #bottom
 	tone = diode.transform(tone) + diode.transform(-tone)
 
 	result = data - tone
 
-	#scale to +-1.0
+        #scale to +-1.0
 	result /= np.max(np.abs(result))
-	#now scale to max value of input file.
+        #now scale to max value of input file.
 	result *= scaler
-	# wavfile.write wants ints between +-5000; hence the cast
+        # wavfile.write wants ints between +-5000; hence the cast
 	clip = soundFolder + "robot.wav"
 	wavfile.write(clip, rate, result.astype(np.int16))
-	#clip = soundFolder + "robot.mp3"
-	#writemp3(clip, rate, result.astype(np.int16), True)
-    
-    
-	print("Play music clip:", clip)
+	print("Play TTS clip:", clip)
 	pygame.mixer.music.load(clip)
 	pygame.mixer.music.play()
 
+if __name__ == '__main__':
+	#-------------OLED Init------------#
+	OLED.Device_Init()	
+	thread = videoPlayer(1, "BandL")
+	thread.start()
+	videothreads.append(thread)	
+	TryInitArduinoCon()
+	DisplayBatteryLevel()
+	
+	robotvoice( "el", "Γειά σου. Με λένε Γουοοοο οοοοόλυ")
+	
 	app.run(debug=False, host='0.0.0.0')

@@ -64,7 +64,7 @@ void playAnimation(int animationNo) {
 			queue.push({1000,  50,  10,   0,   0,   0,  40,  40});
 			break;
 
-		case 3:
+		case 30:
 			// --- Dance smooth ---
 			//			    time, head,necT,necB,eyeR,eyeL,armL,armR
       queue.push({1000,  0,  40,   0,  35,  45,  60,  50});
@@ -99,31 +99,45 @@ void playAnimation(int animationNo) {
       queue.push({1000,  20, 60,   0,  35,  45,  40,  70});
 			
 			break;
-    case 4:
+    case 40: //HUG
       //          time, head,necT,necB,eyeR,eyeL,armL,armR
-      queue.push({151,  100, 0,   0,    35,  45,  0,  0});
-      queue.push({151,  90,  20,    10,  35,  45,  10,  10});
-      queue.push({151,  80,  40,    20,  35,  45,  20,  20});
-      queue.push({151,  70,  40,    30,  35,  45,  30,  30});
-      queue.push({151,  60,  40,    40,  35,  45,  40,  40});
+      queue.push({151,  50, 0,   0,    35,  45,  0,  0});
+      queue.push({151,  50,  20,    10,  35,  45,  10,  10});
+      queue.push({151,  50,  40,    20,  35,  45,  20,  20});
+      queue.push({151,  50,  40,    30,  35,  45,  30,  30});
+      queue.push({151,  50,  40,    40,  35,  45,  40,  40});
       queue.push({151,  50,  40,    50,  35, 45,  50,  50});
-      queue.push({151,  40,  40,   60,  35,  45,  60,  60});
+      queue.push({151,  50,  40,   60,  35,  45,  60,  60});
       queue.push({151,  50,  40,   70,  35,  45,  70,  70});
       queue.push({151,  50,  40,   80,  35,  45,  80,  80});
       queue.push({151,  50,  40,   90,  35,  45,  90,  90});
       queue.push({4000,  50,   40,   100,  35,  45,  100, 100});
-    case 5:
-      queue.push({151,  10,  80,   90,  35,  45,  90,  90});
-      queue.push({151,  20,  80,   80,  35,  45,  80,  80});
-      queue.push({151,  30,  80,   70,  35,  45,  70,  70});
-      queue.push({151,  40,  80,   60,  35,  45,  60,  60});
-      queue.push({151,  50,  80,    50,  35,  45,  50,  50});
-      queue.push({151,  50,  80,    40,  35,  45,  40,  40});
-      queue.push({151,  50,  80,    30,  35,  45,  30,  30});
-      queue.push({151,  50,  80,    20,  35,  45,  20,  20});
-      queue.push({151,  50,  80,    10,  35,  45,  10,  10});
-      queue.push({151,  50,  80,   0,  35,  45,  0,  0});
-      
+      break;
+    case 50: //DOWN FROM HUG
+      queue.push({151,  50,  80,   0,  35,  45,  0,  0});      
+      break;
+    case 51: //SAD
+      queue.push({151,  50,  0,   0,  35,  45,  0,  0});   
+      break;   
+    case 60: //LOOK UP THERE
+      //          time, head,necT,necB,eyeR,eyeL,armL,armR      
+      queue.push({4000, 50,  40,   100,  35,  45,  0, 110});
+      break;
+    case 70: //where are you
+      //          time, head,necT,necB,eyeR,eyeL,armL,armR
+      queue.push({151,  50, 20,   0,    35,  45,  40,  50});
+      queue.push({151,  50,  20,    10,  35,  45,  40,  50});
+      queue.push({151,  50,  40,    20,  35,  45,  40,  50});
+      queue.push({151,  50,  40,    30,  35,  45,  40,  50});
+      queue.push({151,  50,  40,    40,  35,  45,  40,  50});
+      queue.push({2000,  0,  40,    50,  35, 45,  50,  50});
+      queue.push({151,  50,  40,   60,  35,  45,  50,  60});
+      queue.push({151,  50,  40,   70,  35,  45,  50,  60});
+      queue.push({151,  50,  40,   80,  35,  45,  50,  60});
+      queue.push({151,  50,  40,   90,  35,  45,  50,  60});
+      queue.push({1000,  100,   40,   100,  35,  45,  50, 60});
+      queue.push({500,  20,  60,    50,  35, 45,  50,  50});
+      queue.push({1000,  50,   30,   100,  35,  45,  50, 60});
       break;
 		default:
 			Serial.println(F("Invalid animation requested"));

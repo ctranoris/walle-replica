@@ -50,7 +50,7 @@
 #define BAT_L A2 			// Battery level detection analogue pin
 #ifdef BAT_L
 	#define BAT_MAX 11.2   // Maximum voltage
-	#define BAT_MIN 9.2   // Minimum voltage
+	#define BAT_MIN 9.1   // Minimum voltage
 	#define POT_DIV 0.4303 // Potential divider scaling factor
 #endif
 
@@ -119,7 +119,7 @@ int preset[][2] =  {{618,362},  // head rotation
                     {265,330},  // eye right
                     {260,160},  // eye left
                     {600,375},  // arm left
-                    {428,600}, // arm right
+                    {375,600}, // arm right
                     {290,170},  // eyebrow left
                     {450,460}}; // eyebrow right
 

@@ -59,14 +59,14 @@ HEIGHT = 128 # Change to 32 depending on your screen resolution
 
 #------------ Constants for robot VOICE-----------------#
 # Diode constants (must be below 1; paper uses 0.2 and 0.4)
-VB = 0.05
-VL = 0.1
+VB = 0.01
+VL = 0.02
 # Controls distortion
-H = 4
+H = 1
 # Controls N samples in lookup table; probably leave this alone
 LOOKUP_SAMPLES = 1024
 # Frequency (in Hz) of modulating frequency
-MOD_F = 250
+MOD_F = 50
 
 
 # Start sound mixer
@@ -897,12 +897,12 @@ def robotvoice(lng, txt):
 if __name__ == '__main__':
 	#-------------OLED Init------------#
 	OLED.Device_Init()	
-	thread = videoPlayer(1, "BandL")
-	thread.start()
-	videothreads.append(thread)	
-	TryInitArduinoCon()
-	DisplayBatteryLevel()
-	time.sleep(5)
-	playsoundclip("GR_myNameIsWallE.ogg")	
-	
+	#thread = videoPlayer(1, "BandL")
+	#thread.start()
+	#videothreads.append(thread)	
+	#TryInitArduinoCon()
+	#DisplayBatteryLevel()
+	#time.sleep(5)
+	#playsoundclip("GR_myNameIsWallE.ogg")	
+	robotvoice( "el", "Γειά σου. Με λένε Γουοοοο οοοοόλυ")
 	app.run(debug=False, host='0.0.0.0')

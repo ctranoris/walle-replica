@@ -49,8 +49,8 @@
 // To enable battery level detection, uncomment the next line:
 #define BAT_L A2 			// Battery level detection analogue pin
 #ifdef BAT_L
-	#define BAT_MAX 11.2   // Maximum voltage
-	#define BAT_MIN 9.1   // Minimum voltage
+	#define BAT_MAX 11.1   // Maximum voltage
+	#define BAT_MIN 8.8   // Minimum voltage
 	#define POT_DIV 0.4303 // Potential divider scaling factor
 #endif
 
@@ -569,11 +569,14 @@ void checkBatteryLevel() {
 
 	// Read the analogue pin and calculate battery voltage
 	float voltage = analogRead(BAT_L) * 5 / 1024.0;
+ //Serial.print(F("voltage")); Serial.println(voltage);
 	voltage = voltage / POT_DIV;
 	int percentage = int(100 * (voltage - BAT_MIN) / float(BAT_MAX - BAT_MIN));
 
 	// Send the percentage via serial
-	Serial.print(F("Battery_")); Serial.println(percentage);
+ Serial.print(F("Battery_")); Serial.println(percentage);
+ //Serial.print(F("voltage")); Serial.println(voltage);
+ 
 }
 #endif
 

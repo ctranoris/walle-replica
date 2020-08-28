@@ -419,6 +419,16 @@ def audio():
 		return jsonify({'status': 'Error','msg':'Unable to read POST data'})
 
 
+def playsoundclip(clipname):
+	if clipname is not None:
+		clip = soundFolder + clipname
+		print("Play music clip:", clip)
+		pygame.mixer.music.load(clip)
+		pygame.mixer.music.set_volume(volume/10.0)
+		#start_time = time.time()
+		pygame.mixer.music.play()
+
+
 # Play TTS
 @app.route('/tts', methods=['POST'])
 def tts():
@@ -487,6 +497,18 @@ def animate():
 			thread = videoPlayer(1, "WallEMeetsEve")
 			thread.start()
 			videothreads.append(thread)
+		if ( clip == '40'):	
+			playsoundclip("GR_Hug.ogg")	
+		if ( clip == '51'):	
+			playsoundclip("GR_ImSad.ogg")	
+		if ( clip == '52'):	
+			playsoundclip("GR_ImHappy.ogg")	
+			clip = 40
+		if ( clip == '60'):	
+			playsoundclip("GR_LookThere.ogg")	
+		if ( clip == '70'):	
+			playsoundclip("GR_StelioWhereareYou.ogg")	
+			
 		if test_arduino() == 1:
 			queueLock.acquire()
 			workQueue.put("A" + clip)
@@ -877,7 +899,6 @@ if __name__ == '__main__':
 	videothreads.append(thread)	
 	TryInitArduinoCon()
 	DisplayBatteryLevel()
-	
-	robotvoice( "el", "Γειά σου. Με λένε Γουοοοο οοοοόλυ")
+	playsoundclip("GR_myNameIsWallE.ogg")	
 	
 	app.run(debug=False, host='0.0.0.0')

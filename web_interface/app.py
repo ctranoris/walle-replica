@@ -461,17 +461,20 @@ def animate():
 			#PlayMovie('PutOnYourSundayClothes')
 			thread = videoPlayer(1, "PutOnYourSundayClothes")
 			thread.start()
-			videothreads.append(thread)
+			videothreads.append(thread)	
+			clip = "30"
 		if ( clip == '5'):	
 			#PlayMovie('LaVieenRose')
 			thread = videoPlayer(1, "LaVieenRose")
 			thread.start()
-			videothreads.append(thread)
+			videothreads.append(thread)	
+			clip = "30"
 		if ( clip == '6'):	
 			#PlayMovie('DowntoEarth')
 			thread = videoPlayer(1, "DowntoEarth")
 			thread.start()
-			videothreads.append(thread)
+			videothreads.append(thread)	
+			clip = "30"
 		if ( clip == '7'):	
 			#PlayMovie('WALL-E-Trailer')
 			thread = videoPlayer(1, "WALL-E-Trailer")
@@ -503,7 +506,7 @@ def animate():
 			playsoundclip("GR_ImSad.ogg")	
 		if ( clip == '52'):	
 			playsoundclip("GR_ImHappy.ogg")	
-			clip = 40
+			clip = "40"
 		if ( clip == '60'):	
 			playsoundclip("GR_LookThere.ogg")	
 		if ( clip == '70'):	
@@ -899,6 +902,7 @@ if __name__ == '__main__':
 	videothreads.append(thread)	
 	TryInitArduinoCon()
 	DisplayBatteryLevel()
+	time.sleep(5)
 	playsoundclip("GR_myNameIsWallE.ogg")	
 	
 	app.run(debug=False, host='0.0.0.0')
